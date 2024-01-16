@@ -16,6 +16,7 @@
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.13",
+        "driftingly/rector-laravel": "^0.30.0",
         "fakerphp/faker": "^1.9.1",
         "larastan/larastan": "^2.0",
         "laravel/pint": "^1.0",
@@ -23,6 +24,7 @@
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
         "phpunit/phpunit": "^10.1",
+        "rector/rector": "^0.19.1",
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
@@ -38,6 +40,11 @@
         }
     },
     "scripts": {
+        "clean": [
+            "./vendor/bin/rector process",
+            "./vendor/bin/pint --dirty",
+            "./vendor/bin/phpstan -n"
+        ],
         "ide-helper": [
             "@php artisan ide-helper:generate -n",
             "@php artisan ide-helper:models -n",
