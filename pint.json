@@ -1,0 +1,61 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "array_syntax": true,
+        "array_indentation": true,
+        "assign_null_coalescing_to_coalesce_equal": true,
+        "cast_spaces": true,
+        "binary_operator_spaces": {
+            "default": "align_single_space_minimal"
+        },
+        "concat_space": {
+            "spacing": "one"
+        },
+        "dir_constant": true,
+        "final_internal_class": false,
+        "fully_qualified_strict_types": true,
+        "explicit_string_variable": true,
+        "list_syntax": true,
+        "magic_method_casing": true,
+        "simplified_null_return": true,
+        "braces": false,
+        "ordered_imports": false,
+        "single_quote": true,
+        "not_operator_with_space": false,
+        "no_blank_lines_after_phpdoc": true,
+        "no_multiple_statements_per_line": true,
+        "no_space_around_double_colon": true,
+        "no_superfluous_elseif": true,
+        "no_unused_imports": true,
+        "no_useless_else": true,
+        "no_useless_nullsafe_operator": true,
+        "no_whitespace_before_comma_in_array": true,
+        "whitespace_after_comma_in_array": true,
+        "no_whitespace_in_blank_line": true,
+        "no_singleline_whitespace_before_semicolons": true,
+        "no_trailing_whitespace": true,
+        "no_trailing_whitespace_in_comment": true,
+        "object_operator_without_whitespace": true,
+        "trim_array_spaces": true,
+        "trailing_comma_in_multiline": {
+            "elements": [
+                "arrays"
+            ]
+        },
+        "new_with_braces": {
+            "anonymous_class": false,
+            "named_class": false
+        }
+    },
+    "exclude": [
+        "bootstrap",
+        "config",
+        "resources",
+        "storage",
+        "vendor"
+    ],
+    "notName": [
+        "*rector.php",
+        "TrustProxies.php"
+    ]
+}
