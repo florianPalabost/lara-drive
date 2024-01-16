@@ -15,7 +15,9 @@ return new class extends Migration
             $table->uuid()->primary();
             $table->string('name');
             $table->string('path');
+            $table->foreignUuid('parent_id')->nullable()->constrained('folders');
             $table->foreignId('created_by')->constrained('users');
+
             $table->timestamps();
             $table->softDeletes();
         });
