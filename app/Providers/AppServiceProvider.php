@@ -19,6 +19,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // throw exception when :
+        // - Lazy loading relationship
+        // - Assigning non-fillable attributes
+        // - Accessing attributes that don’t exist (or were not retrieved).
+        Model::shouldBeStrict(
+            ! app()->isProduction()
+        );
     }
 }
