@@ -11,12 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('folders', function (Blueprint $table) {
+        Schema::create('custom_files', function (Blueprint $table) {
             $table->uuid('id')->primary();
+
             $table->string('name');
             $table->string('path');
-            $table->foreignUuid('parent_id')->nullable()->constrained('folders');
-            $table->foreignUuid('created_by')->nullable()->constrained('users', 'uuid');
+            $table->float('size');
+            $table->string('extension');
+            $table->foreignUuid('created_by')->constrained('users', 'uuid');
+            $table->foreignUuid('folder_id')->constrained('folders');
+            $table->boolean('is_public')->default(false);
 
             $table->timestamps();
             $table->softDeletes();
@@ -28,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('folders');
+        Schema::dropIfExists('custom_files');
     }
 };

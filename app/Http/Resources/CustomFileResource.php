@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin \App\Models\Folder
+ * @mixin \App\Models\CustomFile
  */
-class FolderResource extends JsonResource
+class CustomFileResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,11 +20,11 @@ class FolderResource extends JsonResource
         return [
             'id'         => $this->id,
             'name'       => $this->name,
+            'size'       => $this->size,
             'path'       => $this->path,
+            'extension'  => $this->extension,
             'created_by' => UserResource::make($this->whenLoaded('created_by')),
-            'parent'     => FolderResource::make($this->whenLoaded('parent')),
-            'children'   => FolderResource::collection($this->whenLoaded('children')),
-            'files'      => CustomFileResource::collection($this->whenLoaded('files')),
+            'folder'     => FolderResource::make($this->whenLoaded('folder')),
         ];
     }
 }
