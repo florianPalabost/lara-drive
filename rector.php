@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Rector\CodeQuality\Rector\Array_\CallableThisArrayToAnonymousFunctionRector;
 use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
 use Rector\CodeQuality\Rector\Empty_\SimplifyEmptyCheckOnEmptyArrayRector;
 use Rector\CodeQuality\Rector\Identical\SimplifyBoolIdenticalTrueRector;
@@ -23,6 +24,7 @@ return static function (RectorConfig $rectorConfig): void {
         __DIR__ . 'vendor',
         SimplifyEmptyCheckOnEmptyArrayRector::class,
         SimplifyBoolIdenticalTrueRector::class,
+        CallableThisArrayToAnonymousFunctionRector::class,
     ]);
 
     // register a single rule
