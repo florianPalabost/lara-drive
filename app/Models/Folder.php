@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Kalnoy\Nestedset\NodeTrait;
 
 class Folder extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes;
+    use HasFactory, HasUuids, NodeTrait, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -20,15 +21,15 @@ class Folder extends Model
         'created_by',
     ];
 
-    public function parent(): BelongsTo
-    {
-        return $this->belongsTo(Folder::class, 'parent_id');
-    }
+    // public function parent(): BelongsTo
+    // {
+    //     return $this->belongsTo(Folder::class, 'parent_id');
+    // }
 
-    public function children(): HasMany
-    {
-        return $this->hasMany(Folder::class, 'parent_id');
-    }
+    // public function children(): HasMany
+    // {
+    //     return $this->hasMany(Folder::class, 'parent_id');
+    // }
 
     public function files(): HasMany
     {

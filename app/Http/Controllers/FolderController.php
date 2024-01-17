@@ -5,15 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Folder\StoreFolderRequest;
 use App\Http\Requests\Folder\UpdateFolderRequest;
 use App\Models\Folder;
+use Inertia\Response;
 
 class FolderController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
-        //
+        // no paginate since the root folders should not be paginated
+        $folderTree = Folder::withDepth()
+            ->whereIsRoot()
+            ->get()
+            ->toTree();
+
+        // Todo: see Inertia
+        return inertia('Folders/Index', ['folderTree' => $folderTree]);
     }
 
     /**

@@ -25,10 +25,11 @@ class DatabaseSeeder extends Seeder
         // Create tree
         $rootFolders = Folder::factory(5)->create();
 
-        $rootFolders->each(function ($folder) {
-            Folder::factory(random_int(0, 3))->create([
-                'parent_id' => $folder->id,
-            ]);
+        $rootFolders->each(function (Folder $folder) {
+            // Folder::factory(random_int(0, 3))->create([
+            //     'parent_id' => $folder->id,
+            // ]);
+            $folder->children()->createMany(Folder::factory(3)->make()->toArray());
         });
 
         $folders = Folder::all();

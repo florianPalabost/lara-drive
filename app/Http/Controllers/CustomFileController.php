@@ -5,15 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CustomFile\StoreCustomFileRequest;
 use App\Http\Requests\CustomFile\UpdateCustomFileRequest;
 use App\Models\CustomFile;
+use App\Models\Folder;
 
 class CustomFileController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Folder $folder)
     {
-        //
+        $customFiles = $folder->files()->paginate(30);
+
+        return $customFiles;
+
     }
 
     /**
