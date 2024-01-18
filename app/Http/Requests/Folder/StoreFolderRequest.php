@@ -22,10 +22,10 @@ class StoreFolderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'       => 'required|string|max:255',
-            'path'       => 'required|string|max:255',
-            'created_by' => 'required|uuid|exists:users,id',
-            'parent_id'  => 'nullable|uuid|exists:folders,id',
+            'name' => 'required|string|max:255',
+            'path' => 'required|string|max:255',
+            // 'created_by' => 'required|uuid|exists:users,id',
+            'parent_id' => 'nullable|uuid|exists:folders,id',
         ];
     }
 }
