@@ -6,6 +6,7 @@ use App\Http\Requests\Folder\StoreFolderRequest;
 use App\Http\Requests\Folder\UpdateFolderRequest;
 use App\Models\Folder;
 use Inertia\Response;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class FolderController extends Controller
 {
@@ -29,7 +30,16 @@ class FolderController extends Controller
      */
     public function store(StoreFolderRequest $request)
     {
-        //
+        $input = $request->validated();
+
+        if ($input['parent_id']) {
+            $parentFolder = Folder::find($input['parent_id'])->first();
+            $folder       = $parentFolder->children()->create($input);
+        } else {
+            $folder = Folder::create($request->validated());
+        }
+
+        return $folder;
     }
 
     /**
@@ -37,7 +47,11 @@ class FolderController extends Controller
      */
     public function show(Folder $folder)
     {
-        //
+        $folder = QueryBuilder::for(Folder::class)
+            ->allowedIncludes(['children'])
+            ->findOrFail($folder->id);
+
+        return $folder;
     }
 
     /**
@@ -46,6 +60,8 @@ class FolderController extends Controller
     public function update(UpdateFolderRequest $request, Folder $folder)
     {
         $folder->update($request->validated());
+
+        return $folder;
     }
 
     /**
@@ -53,6 +69,8 @@ class FolderController extends Controller
      */
     public function destroy(Folder $folder)
     {
-        //
+        Folder::destroy($folder->id);
+
+        return response()->noContent();
     }
 }
