@@ -21,11 +21,12 @@ const form = useForm({
 
 const addFile = () => {
     // debugger;
-    const folderPath = props.folder ? props.folder.path : "";
+    const folderPath =
+        props.folder && props.folder.path ? props.folder.path : "";
     form.path = folderPath + "/" + form.name;
 
     if (props.folder) {
-        form.parent_id = props.folder.id;
+        form.folder_id = props.folder.id;
     }
 
     form.post(route("folders.files.store", { id: props.folder.id }), {
@@ -45,7 +46,7 @@ const closeModal = () => {
 
 <template>
     <div class="p-6">
-        <h2 class="text-lg font-medium text-gray-900">Add Folder</h2>
+        <h2 class="text-lg font-medium text-gray-900">Add File</h2>
 
         <div class="mt-6">
             <InputLabel for="name" value="Name" class="sr-only" />
@@ -69,7 +70,11 @@ const closeModal = () => {
                 placeholder="path"
             />
 
-            <input type="file" @input="form.file = $event.target.files[0]" />
+            <input
+                type="file"
+                class="mt-4 block w-3/4"
+                @input="form.file = $event.target.files[0]"
+            />
             <progress
                 v-if="form.progress"
                 :value="form.progress.percentage"
@@ -81,7 +86,7 @@ const closeModal = () => {
             <InputError :message="form.errors.name" class="mt-2" />
         </div>
 
-        <div class="mt-6 flex justify-end">
+        <div class="mt-8 flex justify-end">
             <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
 
             <PrimaryButton

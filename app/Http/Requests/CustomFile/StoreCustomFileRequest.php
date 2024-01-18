@@ -22,13 +22,13 @@ class StoreCustomFileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'       => 'required|string|max:255',
-            'path'       => 'required|string|max:255',
-            'size'       => 'required|number',
-            'extension'  => 'required|string|max:255',
-            'created_by' => 'required|uuid|exists:users,id',
-            'folder_id'  => 'required|uuid|exists:folders,id',
-            'is_public'  => 'required|boolean',
+            'name'      => 'required|string|max:255',
+            'path'      => 'required|string|max:255',
+            'size'      => 'sometimes|number',
+            'extension' => 'sometimes|string|max:255',
+            // 'created_by' => 'required|uuid|exists:users,id',
+            'folder_id' => 'required|uuid|exists:folders,id',
+            'is_public' => 'sometimes|boolean',
         ];
     }
 }

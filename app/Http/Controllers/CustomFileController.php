@@ -6,6 +6,7 @@ use App\Http\Requests\CustomFile\StoreCustomFileRequest;
 use App\Http\Requests\CustomFile\UpdateCustomFileRequest;
 use App\Models\CustomFile;
 use App\Models\Folder;
+use App\Models\User;
 
 class CustomFileController extends Controller
 {
@@ -25,7 +26,17 @@ class CustomFileController extends Controller
      */
     public function store(StoreCustomFileRequest $request)
     {
-        //
+
+        $input = $request->validated();
+        if ($request->hasFile('file')) {
+            $input['size']       = $request->file('file')->getSize();
+            $input['extension']  = $request->file('file')->getClientOriginalExtension();
+            $input['created_by'] = User::inRandomOrder()->first()->uuid;
+            $customFile          = CustomFile::create($input);
+            $customFile->addMedia($request->file('file'))->toMediaCollection('uploads');
+        }
+
+        return redirect()->back();
     }
 
     /**

@@ -16,10 +16,10 @@ return new class extends Migration
             // $table->uuid('left')->nullable();
             // $table->uuid('right')->nullable();
             // $table->integer('depth')->nullable();
+            // $table->foreignUuid('parent_id')->nullable()->constrained('folders');
             $table->nestedSet();
             $table->string('name');
             $table->string('path');
-            // $table->foreignUuid('parent_id')->nullable()->constrained('folders');
             $table->foreignUuid('created_by')->nullable()->constrained('users', 'uuid');
 
             $table->timestamps();
