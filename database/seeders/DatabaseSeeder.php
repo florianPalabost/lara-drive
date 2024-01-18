@@ -39,5 +39,12 @@ class DatabaseSeeder extends Seeder
                 'folder_id' => $folder->id,
             ]));
         });
+
+        $subFolder    = Folder::where('parent_id', $rootFolders[0]->id)->first();
+        $subsubFolder = Folder::factory()->create(['parent_id' => $subFolder->id]);
+
+        $subsubFolder->files()->saveMany(CustomFile::factory(random_int(0, 10))->create([
+            'folder_id' => $subsubFolder->id,
+        ]));
     }
 }
