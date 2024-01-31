@@ -203,7 +203,9 @@ const toggleAddFileModal = () => {
                             class="flex justify-between"
                             @click="handleSelectFile(file)"
                         >
-                            <span>{{ file.name }}</span>
+                            <span class="text-lg font-bold cursor-pointer">{{
+                                file.name
+                            }}</span>
                             <div class="flex gap-2">
                                 <button
                                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
