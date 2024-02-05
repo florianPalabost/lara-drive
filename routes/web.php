@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\CustomFileController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -38,6 +37,5 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('/folders', FolderController::class);
-Route::resource('/folders.files', CustomFileController::class)->shallow();
 
 require __DIR__ . '/auth.php';

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\CustomFileController;
+use App\Http\Controllers\Api\FolderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::apiResource('folders', FolderController::class);
+
+Route::apiResource('folders.files', CustomFileController::class)->shallow();
