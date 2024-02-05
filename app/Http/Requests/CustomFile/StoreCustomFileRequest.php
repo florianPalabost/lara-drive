@@ -3,6 +3,7 @@
 namespace App\Http\Requests\CustomFile;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class StoreCustomFileRequest extends FormRequest
 {
@@ -27,8 +28,16 @@ class StoreCustomFileRequest extends FormRequest
             'size'      => 'sometimes|number',
             'extension' => 'sometimes|string|max:255',
             // 'created_by' => 'required|uuid|exists:users,id',
-            'folder_id' => 'required|uuid|exists:folders,id',
+            // 'folder_id' => 'required|uuid|exists:folders,id',
             'is_public' => 'sometimes|boolean',
         ];
+    }
+
+    protected function passedValidation()
+    {
+        
+        $this->safe()->merge([
+            'name' => Str::slug($this->name, '-'),
+        ]);
     }
 }
