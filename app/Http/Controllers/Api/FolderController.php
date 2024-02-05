@@ -1,0 +1,76 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Folder\StoreFolderRequest;
+use App\Http\Requests\Folder\UpdateFolderRequest;
+use App\Http\Resources\FolderResource;
+use App\Models\Folder;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Spatie\QueryBuilder\QueryBuilder;
+use Symfony\Component\HttpFoundation\Response;
+
+class FolderController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(): AnonymousResourceCollection
+    {
+        $folders = QueryBuilder::for(Folder::class)
+            ->allowedIncludes(['files', 'children'])
+            ->paginate();
+
+        return FolderResource::collection($folders);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreFolderRequest $request): FolderResource
+    {
+        $input = $request->validated();
+
+        if ($input['parent_id']) {
+            $parentFolder = Folder::find($input['parent_id'])->first();
+            $folder       = $parentFolder->children()->create($input);
+        } else {
+            $folder = Folder::create($request->validated());
+        }
+
+        return new FolderResource($folder);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Folder $folder): FolderResource
+    {
+        $folder = QueryBuilder::for(Folder::class)
+            ->allowedIncludes(['children'])
+            ->findOrFail($folder->id);
+
+        return new FolderResource($folder);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateFolderRequest $request, Folder $folder): FolderResource
+    {
+        $folder->update($request->validated());
+
+        return new FolderResource($folder);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Folder $folder): Response
+    {
+        Folder::destroy($folder->id);
+
+        return response()->noContent();
+    }
+}

@@ -28,19 +28,19 @@ class FolderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFolderRequest $request)
-    {
-        $input = $request->validated();
+    // public function store(StoreFolderRequest $request)
+    // {
+    //     $input = $request->validated();
 
-        if ($input['parent_id']) {
-            $parentFolder = Folder::find($input['parent_id'])->first();
-            $folder       = $parentFolder->children()->create($input);
-        } else {
-            $folder = Folder::create($request->validated());
-        }
+    //     if ($input['parent_id']) {
+    //         $parentFolder = Folder::find($input['parent_id'])->first();
+    //         $folder       = $parentFolder->children()->create($input);
+    //     } else {
+    //         $folder = Folder::create($request->validated());
+    //     }
 
-        return $folder;
-    }
+    //     return $folder;
+    // }
 
     /**
      * Display the specified resource.
@@ -51,18 +51,21 @@ class FolderController extends Controller
             ->allowedIncludes(['children'])
             ->findOrFail($folder->id);
 
+        // TODO: Inertia view
         return $folder;
     }
+
+    // TODO: edit Inertia view
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateFolderRequest $request, Folder $folder)
-    {
-        $folder->update($request->validated());
+    // public function update(UpdateFolderRequest $request, Folder $folder)
+    // {
+    //     $folder->update($request->validated());
 
-        return $folder;
-    }
+    //     return $folder;
+    // }
 
     /**
      * Remove the specified resource from storage.
