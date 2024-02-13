@@ -38,7 +38,7 @@ const retrieveFiles = async (node) => {
             const rawFiles = response.data.data.filter(
                 (f) => typeof f.id === "string"
             );
-            debugger;
+
             if (response.data.links) {
                 paginateFilesLink.value = response.data.links;
             }

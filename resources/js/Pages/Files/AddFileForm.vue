@@ -5,9 +5,13 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { useForm } from "@inertiajs/vue3";
-import { nextTick, ref } from "vue";
+import { ref } from "vue";
+import { useDropzone } from "vue3-dropzone";
 
 const props = defineProps(["folder"]);
+const { getRootProps, getInputProps, isDragActive, ...rest } = useDropzone({
+    onDrop,
+});
 
 const confirmingUserDeletion = ref(false);
 const passwordInput = ref(null);
@@ -19,11 +23,14 @@ const form = useForm({
     file: null,
 });
 
-const addFile = () => {
-    // debugger;
+const addFile = (files) => {
     const folderPath =
         props.folder && props.folder.path ? props.folder.path : "";
     form.path = folderPath + "/" + form.name;
+
+    if (files) {
+        form.file = files[0];
+    }
 
     if (props.folder) {
         form.folder_id = props.folder.id;
@@ -42,6 +49,11 @@ const closeModal = () => {
 
     form.reset();
 };
+
+function onDrop(acceptFiles, rejectReasons) {
+    addFile(acceptFiles); // saveFiles as callback
+    console.log(rejectReasons);
+}
 </script>
 
 <template>
@@ -70,11 +82,21 @@ const closeModal = () => {
                 placeholder="path"
             />
 
-            <input
+            <div v-bind="getRootProps()">
+                <input v-bind="getInputProps()" />
+                <p
+                    class="mt-8 h-48 block border-2 border-dashed border-gray-300 p-4"
+                >
+                    Drop the files here ...
+                </p>
+            </div>
+
+            <!-- <input
                 type="file"
                 class="mt-4 block w-3/4"
                 @input="form.file = $event.target.files[0]"
-            />
+            /> -->
+
             <progress
                 v-if="form.progress"
                 :value="form.progress.percentage"
