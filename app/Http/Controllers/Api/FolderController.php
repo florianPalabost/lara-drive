@@ -19,8 +19,11 @@ class FolderController extends Controller
     public function index(): AnonymousResourceCollection
     {
         $folders = QueryBuilder::for(Folder::class)
-            ->allowedIncludes(['files', 'children'])
-            ->paginate();
+            ->allowedFields(fields: ['id', 'name', 'path', 'created_by'])
+            ->allowedIncludes(includes: ['files', 'children', 'parent', 'createdBy'])
+            ->allowedFilters(filters: ['name', 'path'])
+            ->allowedSorts(sorts: ['name', 'created_by', 'created_at'])
+            ->jsonPaginate();
 
         return FolderResource::collection($folders);
     }
@@ -31,6 +34,8 @@ class FolderController extends Controller
     public function store(StoreFolderRequest $request): FolderResource
     {
         $input = $request->validated();
+
+        abort_if(! $input, Response::HTTP_BAD_REQUEST, 'No input provided');
 
         if ($input['parent_id']) {
             $parentFolder = Folder::find($input['parent_id'])->first();
@@ -48,7 +53,8 @@ class FolderController extends Controller
     public function show(Folder $folder): FolderResource
     {
         $folder = QueryBuilder::for(Folder::class)
-            ->allowedIncludes(['children'])
+            ->allowedFields(fields: ['id', 'name', 'path', 'created_by'])
+            ->allowedIncludes(['children', 'parent', 'files', 'createdBy'])
             ->findOrFail($folder->id);
 
         return new FolderResource($folder);
@@ -59,6 +65,10 @@ class FolderController extends Controller
      */
     public function update(UpdateFolderRequest $request, Folder $folder): FolderResource
     {
+        $input = $request->validated();
+
+        abort_if(! $input, Response::HTTP_BAD_REQUEST, 'No input provided');
+
         $folder->update($request->validated());
 
         return new FolderResource($folder);
