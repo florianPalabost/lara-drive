@@ -1,61 +1,55 @@
 {
     "preset": "laravel",
     "rules": {
-        "array_syntax": true,
-        "array_indentation": true,
-        "assign_null_coalescing_to_coalesce_equal": true,
-        "cast_spaces": true,
         "binary_operator_spaces": {
-            "default": "align_single_space_minimal"
+            "operators": {
+                "=>": "align_single_space_minimal_by_scope"
+            }
         },
         "concat_space": {
             "spacing": "one"
         },
-        "dir_constant": true,
-        "final_internal_class": false,
-        "fully_qualified_strict_types": true,
-        "explicit_string_variable": true,
-        "list_syntax": true,
-        "magic_method_casing": true,
-        "simplified_null_return": true,
-        "braces": false,
-        "ordered_imports": false,
-        "single_quote": true,
-        "not_operator_with_space": false,
-        "no_blank_lines_after_phpdoc": true,
-        "no_multiple_statements_per_line": true,
-        "no_space_around_double_colon": true,
-        "no_superfluous_elseif": true,
-        "no_unused_imports": true,
-        "no_useless_else": true,
-        "no_useless_nullsafe_operator": true,
-        "no_whitespace_before_comma_in_array": true,
-        "whitespace_after_comma_in_array": true,
-        "no_whitespace_in_blank_line": true,
-        "no_singleline_whitespace_before_semicolons": true,
-        "no_trailing_whitespace": true,
-        "no_trailing_whitespace_in_comment": true,
-        "object_operator_without_whitespace": true,
-        "trim_array_spaces": true,
-        "trailing_comma_in_multiline": {
-            "elements": [
-                "arrays"
-            ]
+        "control_structure_continuation_position": {
+            "position": "next_line"
         },
-        "new_with_braces": {
-            "anonymous_class": false,
-            "named_class": false
-        }
-    },
-    "exclude": [
-        "bootstrap",
-        "config",
-        "resources",
-        "storage",
-        "vendor"
-    ],
-    "notName": [
-        "*rector.php",
-        "TrustProxies.php"
-    ]
+        "curly_braces_position": {
+            "control_structures_opening_brace": "next_line_unless_newline_at_signature_end"
+        },
+        "declare_strict_types": true,
+        "explicit_string_variable": true,
+        "global_namespace_import": {
+            "import_classes": true
+        },
+        "no_empty_comment": true,
+        "no_superfluous_phpdoc_tags": false,
+        "ordered_class_elements": {
+            "order": [
+                "use_trait",
+                "constant",
+                "constant_public",
+                "constant_protected",
+                "constant_private",
+                "property_public",
+                "property_protected",
+                "property_private",
+                "construct",
+                "destruct",
+                "method_public_static",
+                "method_public",
+                "method_protected_static",
+                "method_protected",
+                "method_private_static",
+                "method_private"
+            ],
+            "sort_algorithm": "none"
+        },
+        "phpdoc_align": {
+            "align": "left"
+        },
+        "phpdoc_add_missing_param_annotation": {
+            "only_untyped": true
+        },
+        "strict_comparison": true,
+        "ternary_to_null_coalescing": true
+    }
 }
