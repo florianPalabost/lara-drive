@@ -10,6 +10,7 @@ use App\Models\CustomFile;
 use App\Models\Folder;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Spatie\QueryBuilder\QueryBuilder;
 use Symfony\Component\HttpFoundation\Response;
 
 class CustomFileController extends Controller
@@ -19,9 +20,14 @@ class CustomFileController extends Controller
      */
     public function index(Folder $folder): AnonymousResourceCollection
     {
-        $customFiles = $folder->files()->paginate(30);
+        $customFiles = QueryBuilder::for(subject: CustomFile::class)
+            ->allowedFields(fields: ['id', 'name', 'size', 'extension', 'created_by'])
+            ->allowedFilters(filters: ['name', 'extension'])
+            ->allowedIncludes(includes: ['createdBy'])
+            ->where(column: 'folder_id', operator: '=', value: $folder->id)
+            ->jsonPaginate();
 
-        return CustomFileResource::collection($customFiles);
+        return CustomFileResource::collection(resource: $customFiles);
     }
 
     /**
@@ -31,6 +37,8 @@ class CustomFileController extends Controller
     {
 
         $input = $request->validated();
+
+        abort_if(! $input, Response::HTTP_BAD_REQUEST, 'No input provided');
 
         if ($request->hasFile('file')) {
             $input['size']       = $request->file('file')->getSize();
@@ -52,6 +60,11 @@ class CustomFileController extends Controller
      */
     public function show(CustomFile $customFile): CustomFileResource
     {
+        $customFile = QueryBuilder::for(subject: CustomFile::class)
+            ->allowedFields(fields: ['id', 'name', 'size', 'extension', 'created_by'])
+            ->allowedIncludes(includes: ['createdBy'])
+            ->findOrFail(id: $customFile->id);
+
         return new CustomFileResource($customFile);
     }
 
@@ -60,7 +73,11 @@ class CustomFileController extends Controller
      */
     public function update(UpdateCustomFileRequest $request, CustomFile $customFile): CustomFileResource
     {
-        $customFile->update($request->validated());
+        $input = $request->validated();
+
+        abort_if(! $input, Response::HTTP_BAD_REQUEST, 'No input provided');
+
+        $customFile->update($input);
 
         return new CustomFileResource($customFile);
     }
