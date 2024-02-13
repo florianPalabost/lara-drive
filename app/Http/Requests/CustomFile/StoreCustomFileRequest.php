@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\CustomFile;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -35,7 +37,7 @@ class StoreCustomFileRequest extends FormRequest
 
     protected function passedValidation()
     {
-        
+
         $this->safe()->merge([
             'name' => Str::slug($this->name, '-'),
         ]);

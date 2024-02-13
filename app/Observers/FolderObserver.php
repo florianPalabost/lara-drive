@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Observers;
 
 use App\Models\Folder;
@@ -11,7 +13,7 @@ class FolderObserver
      */
     public function created(Folder $folder): void
     {
-        //
+
     }
 
     /**
@@ -19,7 +21,7 @@ class FolderObserver
      */
     public function updated(Folder $folder): void
     {
-        //
+
     }
 
     /**
@@ -45,6 +47,6 @@ class FolderObserver
      */
     public function forceDeleted(Folder $folder): void
     {
-        //
+
     }
 }

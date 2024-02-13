@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -8,47 +10,47 @@ return [
      *
      * You can customize these query string parameters here.
      */
-    'parameters' => [
+    'parameters'                                  => [
         'include' => 'include',
 
-        'filter' => 'filter',
+        'filter'  => 'filter',
 
-        'sort' => 'sort',
+        'sort'    => 'sort',
 
-        'fields' => 'fields',
+        'fields'  => 'fields',
 
-        'append' => 'append',
+        'append'  => 'append',
     ],
 
     /*
      * Related model counts are included using the relationship name suffixed with this string.
      * For example: GET /users?include=postsCount
      */
-    'count_suffix' => 'Count',
+    'count_suffix'                                => 'Count',
 
     /*
      * Related model exists are included using the relationship name suffixed with this string.
      * For example: GET /users?include=postsExists
      */
-    'exists_suffix' => 'Exists',
+    'exists_suffix'                               => 'Exists',
 
     /*
      * By default the package will throw an `InvalidFilterQuery` exception when a filter in the
      * URL is not allowed in the `allowedFilters()` method.
      */
-    'disable_invalid_filter_query_exception' => false,
+    'disable_invalid_filter_query_exception'      => false,
 
     /*
      * By default the package will throw an `InvalidSortQuery` exception when a sort in the
      * URL is not allowed in the `allowedSorts()` method.
      */
-    'disable_invalid_sort_query_exception' => false,
+    'disable_invalid_sort_query_exception'        => false,
 
     /*
      * By default the package will throw an `InvalidIncludeQuery` exception when an include in the
      * URL is not allowed in the `allowedIncludes()` method.
      */
-    'disable_invalid_includes_query_exception' => false,
+    'disable_invalid_includes_query_exception'    => false,
 
     /*
      * By default, the package expects relationship names to be snake case plural when using fields[relationship].

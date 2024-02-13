@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -41,8 +43,8 @@ class CustomFileController extends Controller
         abort_if(! $input, Response::HTTP_BAD_REQUEST, 'No input provided');
 
         if ($request->hasFile('file')) {
-            $input['size']       = $request->file('file')->getSize();
-            $input['extension']  = $request->file('file')->getClientOriginalExtension();
+            $input['size'] = $request->file('file')->getSize();
+            $input['extension'] = $request->file('file')->getClientOriginalExtension();
             $input['created_by'] = User::inRandomOrder()->first()->uuid;
         }
 

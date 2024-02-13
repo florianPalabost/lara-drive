@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -39,8 +41,9 @@ class FolderController extends Controller
 
         if ($input['parent_id']) {
             $parentFolder = Folder::find($input['parent_id'])->first();
-            $folder       = $parentFolder->children()->create($input);
-        } else {
+            $folder = $parentFolder->children()->create($input);
+        }
+        else {
             $folder = Folder::create($request->validated());
         }
 

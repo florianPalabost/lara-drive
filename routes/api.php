@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\Api\CustomFileController;
 use App\Http\Controllers\Api\FolderController;
 use Illuminate\Http\Request;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -40,7 +42,7 @@ class DatabaseSeeder extends Seeder
             ]));
         });
 
-        $subFolder    = Folder::where('parent_id', $rootFolders[0]->id)->first();
+        $subFolder = Folder::where('parent_id', $rootFolders[0]->id)->first();
         $subsubFolder = Folder::factory()->create(['parent_id' => $subFolder->id]);
 
         $subsubFolder->files()->saveMany(CustomFile::factory(random_int(0, 10))->create([

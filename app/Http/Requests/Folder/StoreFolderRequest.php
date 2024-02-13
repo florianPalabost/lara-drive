@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Folder;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -22,8 +24,8 @@ class StoreFolderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'path' => 'required|string|max:255',
+            'name'      => 'required|string|max:255',
+            'path'      => 'required|string|max:255',
             // 'created_by' => 'required|uuid|exists:users,id',
             'parent_id' => 'nullable|uuid|exists:folders,id',
         ];

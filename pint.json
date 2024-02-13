@@ -12,9 +12,6 @@
         "control_structure_continuation_position": {
             "position": "next_line"
         },
-        "curly_braces_position": {
-            "control_structures_opening_brace": "next_line_unless_newline_at_signature_end"
-        },
         "declare_strict_types": true,
         "explicit_string_variable": true,
         "global_namespace_import": {
