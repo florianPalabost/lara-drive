@@ -22,9 +22,9 @@ class CustomFileResource extends JsonResource
         return [
             'id'         => $this->id,
             'name'       => $this->name,
-            'size'       => $this->size,
-            'path'       => $this->path,
-            'extension'  => $this->extension,
+            'size'       => $this->whenHas('size'),
+            'path'       => $this->whenHas('path'),
+            'extension'  => $this->whenHas('extension'),
             'created_by' => UserResource::make($this->whenLoaded('created_by')),
             'folder'     => FolderResource::make($this->whenLoaded('folder')),
         ];

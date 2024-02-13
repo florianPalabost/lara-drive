@@ -20,13 +20,21 @@ class FolderResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'         => $this->id,
-            'name'       => $this->name,
-            'path'       => $this->path,
-            'created_by' => UserResource::make($this->whenLoaded('created_by')),
-            'parent'     => FolderResource::make($this->whenLoaded('parent')),
-            'children'   => FolderResource::collection($this->whenLoaded('children')),
-            'files'      => CustomFileResource::collection($this->whenLoaded('files')),
+            'id'              => $this->id,
+            'name'            => $this->name,
+            'path'            => $this->path,
+            'created_by'      => UserResource::make($this->whenLoaded('created_by')),
+            'parent'          => FolderResource::make($this->whenLoaded('parent')),
+            'children'        => FolderResource::collection($this->whenLoaded('children')),
+            'files'           => CustomFileResource::collection($this->whenLoaded('files')),
+
+            'parent_count'    => $this->whenCounted('parent'),
+            'children_count'  => $this->whenCounted('children'),
+            'files_count'     => $this->whenCounted('files'),
+
+            'parent_exists'   => $this->whenHas('parent_exists'),
+            'children_exists' => $this->whenHas('children_exists'),
+            'files_exists'    => $this->whenHas('files_exists'),
         ];
     }
 }
