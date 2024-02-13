@@ -28,11 +28,10 @@ props.folderTree.forEach((folder, index) => {
 });
 
 const retrieveFiles = async (node) => {
-    // debugger;
     // node.state.isLoading = true;
 
     await axios
-        .get(`/folders/${node.id}/files`)
+        .get(`/api/folders/${node.id}/files`)
         .then((response) => {
             console.log(response.data);
 
