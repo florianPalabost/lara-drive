@@ -6,6 +6,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Traits\HasTimestampsScopes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,7 +16,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable // implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, HasTimestampsScopes, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -47,6 +48,11 @@ class User extends Authenticatable // implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password'          => 'hashed',
     ];
+
+    public function folders(): HasMany
+    {
+        return $this->hasMany(Folder::class, 'created_by');
+    }
 
     public function files(): HasMany
     {

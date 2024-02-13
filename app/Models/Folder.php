@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\HasTimestampsScopes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,7 @@ use Kalnoy\Nestedset\NodeTrait;
 
 class Folder extends Model
 {
-    use HasFactory, HasUuids, NodeTrait, SoftDeletes;
+    use HasFactory, HasTimestampsScopes, HasUuids, NodeTrait, SoftDeletes;
 
     protected $fillable = [
         'name',
