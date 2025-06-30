@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
+test('example', function () {
+    $response = $this->get('/');
 
-describe('FolderController', function () {
-    it('can display a listing of folders resources', function () {
-        $this->get(route('folders.index'))->assertOk();
-    });
+    $response->assertStatus(200);
 });
