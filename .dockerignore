@@ -1,0 +1,8 @@
+node_modules
+vendor
+tests
+.env
+.env.*
+storage/logs/*
+.docs/*
+.vscode/*
