@@ -2,14 +2,6 @@
 
 declare(strict_types=1);
 
-use Illuminate\Testing\TestResponse;
-use Pest\Expectation;
-use Pest\Expectations\EachExpectation;
-use Pest\Expectations\HigherOrderExpectation;
-use Pest\Expectations\OppositeExpectation;
-use Symfony\Component\HttpFoundation\Response;
-use Tests\TestCase;
-
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -17,11 +9,13 @@ use Tests\TestCase;
 |
 | The closure you provide to your test functions is always bound to a specific PHPUnit test
 | case class. By default, that class is "PHPUnit\Framework\TestCase". Of course, you may
-| need to change it using the "uses()" function to bind a different classes or traits.
+| need to change it using the "pest()" function to bind a different classes or traits.
 |
 */
 
-uses(TestCase::class, Illuminate\Foundation\Testing\LazilyRefreshDatabase::class)->in('Feature');
+pest()->extend(Tests\TestCase::class)
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
@@ -38,26 +32,6 @@ expect()->extend('toBeOne', function () {
     return $this->toBe(1);
 });
 
-expect()->extend('toBeSuccessfulApiResponse', function () {
-    return $this->toBeJson()->json()
-        ->toHaveKey('data')
-        ->data->not()->toBeEmpty();
-});
-
-expect()->extend('toBeErrorApiResponse', function () {
-    return $this->toBeJson()->json()
-        ->toHaveKey('errors')
-        ->errors->not()->toBeEmpty();
-});
-
-expect()->extend('toBeSuccessfulApiResponsePaginated', function () {
-    return $this->toBeJson()->json()
-        ->toHaveKey('data')
-        ->data->not()->toBeEmpty()
-        ->toHaveKey('links')
-        ->toHaveKey('meta');
-});
-
 /*
 |--------------------------------------------------------------------------
 | Functions
@@ -69,16 +43,7 @@ expect()->extend('toBeSuccessfulApiResponsePaginated', function () {
 |
 */
 
-/**
- * Assert that the response match the default successful api response
- */
-function expectSuccessfulApiResponse(TestResponse $response, int $httpStatus = Response::HTTP_OK): Expectation|OppositeExpectation|int|EachExpectation|HigherOrderExpectation
+function something(): void
 {
-    $method = match ($httpStatus) {
-        Response::HTTP_CREATED => 'toBeCreated',
-        default                => 'toBeSuccessful'
-    };
-
-    return expect($response->getStatusCode())->$method()
-        ->and($response->getContent())->toBeSuccessfulApiResponse();
+    // ..
 }
