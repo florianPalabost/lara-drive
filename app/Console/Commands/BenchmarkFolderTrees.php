@@ -117,7 +117,7 @@ class BenchmarkFolderTrees extends Command
     protected function fetchAdjacencySubtree(): void
     {
         $root = DB::table('adjacency_folders')->orderByDesc('id')->first();
-        $descendants = $this->getAdjacencyDescendants($root->id);
+        $this->getAdjacencyDescendants($root->id);
     }
 
     protected function getAdjacencyDescendants($parentId): Collection
@@ -138,7 +138,7 @@ class BenchmarkFolderTrees extends Command
         $id = 1;
         $queue = [['', 1]];
 
-        while (! empty($queue) && $id <= $max) {
+        while ($queue !== [] && $id <= $max) {
             [$parentPath, $level] = array_shift($queue);
 
             for ($i = 1; $i <= 10 && $id <= $max; $i++) {
@@ -175,7 +175,7 @@ class BenchmarkFolderTrees extends Command
         $this->nestedSetInsert($root, 2);
     }
 
-    protected function nestedSetInsert($parent, $level, $maxLevel = 4): void
+    protected function nestedSetInsert(self $parent, $level, $maxLevel = 4): void
     {
         if ($level > $maxLevel) {
             return;
