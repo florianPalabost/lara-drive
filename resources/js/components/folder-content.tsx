@@ -1,8 +1,9 @@
-import { FolderIcon } from 'lucide-react';
+import { FolderIcon, LucideDelete, LucideTrash } from 'lucide-react';
 import { useFolderContext } from '@/contexts/folder-context';
 import { Folder } from '@/types/folder';
 import { FileList } from './drive-file/file-list';
 import FileUpload from './drive-file/file-upload';
+import { Button } from './ui/button';
 
 export function FolderContent() {
     const { selectedFolder: folder, loadFolder } = useFolderContext();
@@ -25,6 +26,12 @@ export function FolderContent() {
                     <p>Created: {folder.created_at}</p>
                     <p>Last updated: {folder.updated_at}</p>
                 </div>
+                <Button variant="destructive" className="hover:bg-red-700">
+                    <a href={route('folders.destroy', folder.uuid)} className="flex items-center">
+                        <LucideTrash className="mr-2" />
+                        Delete
+                    </a>
+                </Button>
             </div>
 
             {/* Folders */}

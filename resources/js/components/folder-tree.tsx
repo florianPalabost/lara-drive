@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/react';
-import { FolderIcon, FolderOpen, LucidePlus } from 'lucide-react';
+import { FolderIcon, FolderOpen, LucideImport, LucidePlus } from 'lucide-react';
 import { NodeApi, Tree, TreeApi, TreeNodeProps } from 'react-arborist';
 import { useFolderContext } from '@/contexts/folder-context';
 import { Folder } from '@/types/folder';
@@ -43,7 +43,12 @@ export function FolderTree() {
             <div className="border rounded-md bg-white shadow-sm p-2 h-full flex flex-col">
                 <Button className="text-sm mb-4 px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-center">
                     <a href={route('folders.create', { folder: selectedFolder?.uuid })} className="flex items-center">
-                        <LucidePlus className="mr-2" /> Add Folder
+                        <LucidePlus className="mr-2" /> Add folder
+                    </a>
+                </Button>
+                <Button className="text-sm mb-4 px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-center">
+                    <a href={route('folders.import', { folder: selectedFolder?.uuid })} className="flex items-center">
+                        <LucideImport className="mr-2" /> Import folder
                     </a>
                 </Button>
                 <Tree

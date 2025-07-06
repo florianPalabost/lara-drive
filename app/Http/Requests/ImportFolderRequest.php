@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class UpdateFolderRequest extends FormRequest
+class ImportFolderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +25,9 @@ class UpdateFolderRequest extends FormRequest
     public function rules(): array
     {
         return [
-
+            'base_folder_id' => ['required', Rule::exists('folders', 'uuid')],
+            'files'          => ['required', 'array'],
+            'files.*'        => ['required', 'file'],
         ];
     }
 }
