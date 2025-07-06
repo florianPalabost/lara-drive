@@ -7,9 +7,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreFolderRequest;
 use App\Http\Requests\UpdateFolderRequest;
 use App\Models\Folder;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Response;
 
 class FolderController extends Controller
@@ -55,7 +58,6 @@ class FolderController extends Controller
     public function store(StoreFolderRequest $request): RedirectResponse
     {
         $input = $request->validated();
-
         $parentFolder = null;
 
         if (Arr::has($input, 'parent_id') && $input['parent_id']) {
@@ -64,10 +66,16 @@ class FolderController extends Controller
                 ->firstOrFail();
         }
 
+        $folderPath = match (true) {
+            $parentFolder && $parentFolder->parent_id => $parentFolder->path . '/' . $parentFolder->uuid,
+            $parentFolder                             => '/' . $parentFolder->uuid,
+            default                                   => '/',
+        };
+
         $folder = Folder::create([
             ...$input,
             'parent_id' => $parentFolder->id ?? null,
-            'path'      => $parentFolder ? $parentFolder->path . '/' . $parentFolder->uuid : '/',
+            'path'      => $folderPath,
             'user_id'   => auth()->user()->id,
         ]);
 
@@ -75,9 +83,17 @@ class FolderController extends Controller
     }
 
     /**
+     * TODO: move to dedicate controller
      * Display the specified resource.
      */
-    public function show(Folder $folder) {}
+    public function load(Folder $folder): JsonResponse
+    {
+        $folder->load(['children', 'files']);
+
+        return response()->json([
+            'folder' => $folder,
+        ]);
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -99,7 +115,15 @@ class FolderController extends Controller
      */
     public function destroy(Folder $folder): RedirectResponse
     {
-        $folder->delete();
+        // TODO: need to also delete folder from storage ?
+        // may need to keep folder in storage in case of restore ?
+        try {
+            Storage::disk('minio')->deleteDirectory($folder->path);
+            $folder->delete();
+        }
+        catch (Exception $exception) {
+            report($exception);
+        }
 
         return to_route('folders.index');
     }
