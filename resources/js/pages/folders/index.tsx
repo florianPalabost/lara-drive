@@ -3,8 +3,8 @@ import { FolderContent } from '@/components/folder-content';
 import { FolderTree } from '@/components/folder-tree';
 import { FolderProvider } from '@/contexts/folder-context';
 import AppLayout from '@/layouts/app-layout';
-import { Folder } from '@/types/folder';
 import { BreadcrumbItem } from '@/types';
+import { Folder } from '@/types/folder';
 
 interface FolderIndexProps {
     folders: Array<Folder>;

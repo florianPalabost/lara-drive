@@ -1,9 +1,9 @@
+import { Head } from '@inertiajs/react';
+import { LucideDownload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { DriveFile } from '@/types/folder';
-import { Head } from '@inertiajs/react';
-import { LucideDownload } from 'lucide-react';
 
 interface RecentFilesProps {
     recentFiles: Array<DriveFile>;

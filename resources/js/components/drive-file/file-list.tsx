@@ -1,8 +1,8 @@
+import { router } from '@inertiajs/react';
+import { LucideDownload, LucideEye, LucideTrash } from 'lucide-react';
 import { route } from 'ziggy-js';
 import { DriveFile } from '@/types/folder';
-import { LucideDownload, LucideEye, LucideTrash } from 'lucide-react';
 import { Button } from '../ui/button';
-import { router } from '@inertiajs/react';
 
 interface FileListProps {
     files: Array<DriveFile>;
