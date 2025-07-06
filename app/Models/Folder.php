@@ -34,6 +34,14 @@ class Folder extends Model
     }
 
     /**
+     * @return HasMany<DriveFile,$this>
+     */
+    public function files(): HasMany
+    {
+        return $this->hasMany(DriveFile::class, 'folder_id');
+    }
+
+    /**
      * @return BelongsTo<User,$this>
      */
     public function user(): BelongsTo

@@ -8,6 +8,7 @@ namespace App\Models;
 
 use App\Traits\HasUuidColumn;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -38,6 +39,22 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    /**
+     * @return HasMany<DriveFile,$this>
+     */
+    public function files(): HasMany
+    {
+        return $this->hasMany(DriveFile::class, 'user_id');
+    }
+
+    /**
+     * @return HasMany<Folder,$this>
+     */
+    public function folders(): HasMany
+    {
+        return $this->hasMany(Folder::class, 'user_id');
+    }
 
     /**
      * Get the attributes that should be cast.
