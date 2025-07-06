@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,6 +23,7 @@ class FolderFactory extends Factory
             'name'      => fake()->name(),
             'path'      => fake()->unique()->filePath(),
             'parent_id' => null,
+            'user_id'   => User::first()->id ?? User::factory(),
         ];
     }
 }
