@@ -1,22 +1,42 @@
 import { router } from '@inertiajs/react';
 import { FolderIcon, FolderOpen, LucidePlus } from 'lucide-react';
-import { NodeApi, Tree, TreeNodeProps } from 'react-arborist';
+import { NodeApi, Tree, TreeApi, TreeNodeProps } from 'react-arborist';
 import { useFolderContext } from '@/contexts/folder-context';
 import { Folder } from '@/types/folder';
 import { FolderTreeNode } from './folder-tree-node';
 import { Button } from './ui/button';
+import { useEffect, useRef } from 'react';
 
 export function FolderTree() {
+    const treeRef = useRef<TreeApi<Folder>>(null);
     const { folders, selectedFolder, loadFolder } = useFolderContext();
+
     console.debug('rendering FolderTree');
+
     const handleOnSelect = async (nodes: NodeApi<Folder>[]) => {
         if (!nodes.length) return;
+
         const node = nodes[0];
         const folderUuid = node.data.uuid;
 
-        loadFolder(folderUuid);
         node.toggle();
+
+        // Do nothing more if the folder is already loaded
+        if (folderUuid === selectedFolder?.uuid) return;
+
+        loadFolder(folderUuid);
     };
+
+    useEffect(() => {
+        if (selectedFolder && treeRef.current) {
+            const node = treeRef.current.get(selectedFolder.uuid);
+
+            if (node && !node.isSelected) {
+                node.select();
+                node.open();
+            }
+        }
+    }, [selectedFolder]);
 
     return (
         <div className="border rounded-lg bg-white shadow-sm p-4 max-h-screen overflow-auto">
@@ -27,6 +47,7 @@ export function FolderTree() {
                     </a>
                 </Button>
                 <Tree
+                    ref={treeRef}
                     data={folders}
                     openByDefault={false}
                     childrenAccessor="children"

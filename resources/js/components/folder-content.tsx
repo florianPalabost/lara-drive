@@ -5,10 +5,10 @@ import { FileList } from './drive-file/file-list';
 import FileUpload from './drive-file/file-upload';
 
 export function FolderContent() {
-    const { selectedFolder: folder, setSelectedFolder } = useFolderContext();
+    const { selectedFolder: folder, loadFolder } = useFolderContext();
 
     const handleSelectFolder = (newSelectedFolder: Folder) => () => {
-        setSelectedFolder(newSelectedFolder);
+        loadFolder(newSelectedFolder.uuid);
     };
 
     if (!folder) {
