@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import { BookOpen, Clock, Folder, LayoutGrid } from 'lucide-react';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -17,6 +17,11 @@ const mainNavItems: NavItem[] = [
         title: 'Folders & Files',
         href: '/folders',
         icon: Folder,
+    },
+    {
+        title: 'Recent Files',
+        href: '/files/recent',
+        icon: Clock,
     },
 ];
 
