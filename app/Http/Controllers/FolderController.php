@@ -17,11 +17,11 @@ class FolderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        // TODO: when files implemented add with files
         $folders = Folder::query()->whereNull('parent_id')
-            ->with('children')
+            ->with('children', 'files')
+            ->where('user_id', auth()->user()->id)
             ->orderBy('name')
             ->get();
 
