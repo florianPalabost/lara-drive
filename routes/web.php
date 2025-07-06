@@ -18,6 +18,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::get('files/{uuid}/download', DownloadDriveFileController::class)->name('files.download');
+    Route::get('files/recent', [DriveFileController::class, 'recent'])->name('files.recent');
     Route::resource('files', DriveFileController::class);
     Route::resource('folders', FolderController::class);
 });

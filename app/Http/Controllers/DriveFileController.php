@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateDriveFileRequest;
 use App\Models\DriveFile;
 use App\Models\Folder;
 use Illuminate\Http\RedirectResponse;
+use Inertia\Response;
 
 class DriveFileController extends Controller
 {
@@ -65,5 +66,23 @@ class DriveFileController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DriveFile $driveFile) {}
+    public function destroy(DriveFile $driveFile): RedirectResponse
+    {
+        $driveFile->delete();
+
+        return to_route('folders.index');
+    }
+
+    public function recent(): Response
+    {
+        $recentFiles = auth()->user()
+            ->files()
+            ->latest()
+            ->take(10)
+            ->get();
+
+        return inertia('files/recent', [
+            'recentFiles' => $recentFiles,
+        ]);
+    }
 }
