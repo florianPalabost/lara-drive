@@ -21,7 +21,7 @@ trait HasUuidColumn
 
         static::creating(function (self $model) {
             if (! $model->uuid) {
-                $model->uuid = (string) Str::uuid();
+                $model->uuid = (string) Str::uuid7();
             }
         });
     }
