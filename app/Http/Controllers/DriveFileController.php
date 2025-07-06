@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\CreateNewDriveFile;
 use App\Http\Requests\StoreDriveFileRequest;
 use App\Http\Requests\UpdateDriveFileRequest;
 use App\Models\DriveFile;
 use App\Models\Folder;
+use Exception;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Response;
 
 class DriveFileController extends Controller
@@ -26,49 +29,48 @@ class DriveFileController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreDriveFileRequest $request): RedirectResponse
+    public function store(StoreDriveFileRequest $request, CreateNewDriveFile $createNewDriveFileAction): RedirectResponse
     {
         $input = $request->validated();
         $uploadedFile = request()->file('file');
 
-        $folder = Folder::query()
-            ->where('uuid', $input['folder_id'])
-            ->firstOrFail();
-        $storedPath = $uploadedFile->storeAs("folders/{$folder->uuid}", $uploadedFile->getClientOriginalName(), 'minio');
-
-        DriveFile::create([
-            'folder_id'     => $input['folder_id'],
-            'original_name' => $uploadedFile->getClientOriginalName(),
-            'mime_type'     => $uploadedFile->getClientMimeType(),
-            'size'          => $uploadedFile->getSize(),
-            'path'          => $storedPath,
+        $createNewDriveFileAction->handle([
+            'folder_id' => $input['folder_id'],
+            'file'      => $uploadedFile,
         ]);
 
-        // TODO: if show implemented return to show
+        // TODO: if folder.show implemented return to show
         return to_route('folders.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(DriveFile $driveFile) {}
+    public function show(DriveFile $file) {}
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(DriveFile $driveFile) {}
+    public function edit(DriveFile $file) {}
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDriveFileRequest $request, DriveFile $driveFile) {}
+    public function update(UpdateDriveFileRequest $request, DriveFile $file) {}
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DriveFile $driveFile): RedirectResponse
+    public function destroy(DriveFile $file): RedirectResponse
     {
-        $driveFile->delete();
+        // TODO: delete file from storage
+        try {
+            Storage::disk('minio')->delete($file->path);
+            $file->delete();
+        }
+        catch (Exception $exception) {
+            report($exception);
+        }
 
         return to_route('folders.index');
     }

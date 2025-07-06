@@ -39,4 +39,9 @@ class DriveFile extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
 }
