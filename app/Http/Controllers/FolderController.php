@@ -97,5 +97,10 @@ class FolderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Folder $folder) {}
+    public function destroy(Folder $folder): RedirectResponse
+    {
+        $folder->delete();
+
+        return to_route('folders.index');
+    }
 }
