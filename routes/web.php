@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\DownloadDriveFileController;
 use App\Http\Controllers\DriveFileController;
 use App\Http\Controllers\FolderController;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
+    Route::get('files/{uuid}/download', DownloadDriveFileController::class)->name('files.download');
     Route::resource('files', DriveFileController::class);
     Route::resource('folders', FolderController::class);
 });
