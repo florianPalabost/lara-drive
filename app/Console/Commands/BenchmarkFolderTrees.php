@@ -91,7 +91,7 @@ class BenchmarkFolderTrees extends Command
         ];
     }
 
-    protected function insertAdjacencyTree($max = 10000): void
+    protected function insertAdjacencyTree(int $max = 10000): void
     {
         $id = 1;
         $queue = [[null, 1]];
@@ -133,7 +133,7 @@ class BenchmarkFolderTrees extends Command
         return $descendants;
     }
 
-    protected function insertMaterializedTree($max = 10000): void
+    protected function insertMaterializedTree(int $max = 10000): void
     {
         $id = 1;
         $queue = [['', 1]];

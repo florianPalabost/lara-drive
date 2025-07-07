@@ -10,16 +10,20 @@ export function FolderImport() {
     const inputRef = useRef<HTMLInputElement>(null);
     const { data, setData, post, processing, errors, reset, progress } = useForm({
         files: [] as File[],
+        paths: [] as string[],
         base_folder_id: null as string | null,
     });
 
     const handleFolderChange = (e: ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
 
+        const paths = files.map((file) => file.webkitRelativePath);
         console.debug('files', files);
-
+        console.debug('paths', paths);
+        console.debug('selectedFolder', selectedFolder);
         setData({
             files,
+            paths,
             base_folder_id: selectedFolder?.uuid ?? null,
         });
     };

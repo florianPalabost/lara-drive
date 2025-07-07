@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 class CreateNewDriveFile
 {
     /**
-     * @param array{folder_id: string, file: UploadedFile} $data
+     * @param array{folder_id: string, file: UploadedFile|null} $data
      */
     public function handle(array $data): DriveFile
     {

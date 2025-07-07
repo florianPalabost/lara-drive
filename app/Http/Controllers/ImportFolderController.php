@@ -31,7 +31,7 @@ class ImportFolderController extends Controller
     {
         $input = $request->validated();
         Log::debug('input', $input);
-        $importFolderService->handle($input['files'], $input['base_folder_id']);
+        $importFolderService->handle($input['files'], $input['paths'], $input['base_folder_id']);
 
         return to_route('folders.index');
         // $user = auth()->user();
