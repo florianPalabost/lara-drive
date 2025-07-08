@@ -1,11 +1,11 @@
 import { router } from '@inertiajs/react';
 import { FolderIcon, FolderOpen, LucideImport, LucidePlus } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 import { NodeApi, Tree, TreeApi, TreeNodeProps } from 'react-arborist';
 import { useFolderContext } from '@/contexts/folder-context';
 import { Folder } from '@/types/folder';
 import { FolderTreeNode } from './folder-tree-node';
 import { Button } from './ui/button';
-import { useEffect, useRef } from 'react';
 
 export function FolderTree() {
     const treeRef = useRef<TreeApi<Folder>>(null);

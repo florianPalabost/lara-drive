@@ -1,9 +1,10 @@
-import { useFolderContext } from '@/contexts/folder-context';
 import { useForm } from '@inertiajs/react';
 import { ChangeEvent, FormEvent, useRef } from 'react';
+import { toast } from 'sonner';
+import { useFolderContext } from '@/contexts/folder-context';
+import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
 import { Progress } from '../ui/progress';
-import { Button } from '../ui/button';
 
 export function FolderImport() {
     const { selectedFolder } = useFolderContext();
@@ -39,6 +40,11 @@ export function FolderImport() {
             onSuccess: () => {
                 reset();
                 if (inputRef.current) inputRef.current.value = '';
+                toast.success('Folder imported successfully!');
+            },
+            onError: (errors) => {
+                console.error(errors);
+                toast.error('Folder import failed!');
             },
         });
     };

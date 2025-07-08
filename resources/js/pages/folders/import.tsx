@@ -1,9 +1,9 @@
+import { Head } from '@inertiajs/react';
 import { FolderImport } from '@/components/folder/folder-import';
 import { FolderProvider } from '@/contexts/folder-context';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Folder } from '@/types/folder';
-import { Head } from '@inertiajs/react';
 
 interface ImportFolderProps {
     selectedFolder: Folder | null;

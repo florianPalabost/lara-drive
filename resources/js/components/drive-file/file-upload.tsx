@@ -1,5 +1,6 @@
 import { useForm } from '@inertiajs/react';
 import { useRef } from 'react';
+import { toast } from 'sonner';
 import { useFolderContext } from '@/contexts/folder-context';
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
@@ -32,6 +33,11 @@ export default function FileUpload() {
                 reset();
                 if (inputRef.current) inputRef.current.value = '';
                 if (selectedFolder?.uuid) loadFolder(selectedFolder.uuid);
+                toast.success('File uploaded successfully!');
+            },
+            onError: (errors) => {
+                console.error(errors);
+                toast.error('File upload failed!');
             },
         });
     };
