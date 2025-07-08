@@ -6,15 +6,12 @@ namespace App\Services;
 
 use App\Actions\CreateNewDriveFile;
 use App\Models\Folder;
+use Exception;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 
 class ImportFolderService
 {
-    /**
-     * Create a new class instance.
-     */
-    public function __construct() {}
-
     /**
      * Invoke the class instance.
      *
@@ -23,27 +20,71 @@ class ImportFolderService
      */
     public function handle(array $files, array $paths, ?string $folderUuid = null): void
     {
-        $user = auth()->user();
-
         $parentFolder = $folderUuid ? Folder::query()
-                ->where('uuid', $folderUuid)
-                ->firstOrFail() : null;
+            ->where('uuid', $folderUuid)
+            ->firstOrFail() : null;
 
         $newFiles = [];
 
-        foreach ($files as $index => $file) {
-            // TODO: extract folder path & filename
-            $testCurrentPath = $file->getClientOriginalName(); // TODO: see if relative path & same than $paths[$index]
-            $currentPath = $paths[$index];
-            $explodedPath = explode('/', $currentPath);
-            // TODO: create each folder if not exists in the path
+        try {
+            DB::beginTransaction();
 
+            /** @var array<int, Folder> */
+            $foldersCache = [];
 
-            // TODO: create & store file
-            $newFiles[] = new CreateNewDriveFile()->handle([
-                'folder_id' => $parentFolder->uuid ?? null,
-                'file'      => $file,
-            ]);
+            foreach ($files as $index => $file) {
+                $currentPath = $paths[$index];
+
+                $folderId = $this->ensureFoldersExistForPath($currentPath, $parentFolder);
+
+                $folder = $foldersCache[$folderId] ??= Folder::query()
+                    ->where('id', $folderId)
+                    ->firstOrFail();
+
+                $newFiles[] = (new CreateNewDriveFile)->handle([
+                    'folder_id' => $folder->uuid,
+                    'file'      => $file,
+                ]);
+            }
+
+            DB::commit();
         }
+        catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
+    private function ensureFoldersExistForPath(string $relativePath, ?Folder $parentFolder): ?int
+    {
+        $pathParts = explode('/', $relativePath);
+        array_pop($pathParts); // remove the filename
+
+        $folderCache = [];
+        $currentPath = '';
+        $parentId = $parentFolder->id ?? null;
+
+        foreach ($pathParts as $folderName) {
+            $currentPath .= ($currentPath ? '/' : '') . $folderName;
+
+            if (isset($folderCache[$currentPath])) {
+                $parentId = $folderCache[$currentPath];
+
+                continue;
+            }
+
+            $folder = Folder::firstOrCreate([
+                'name'      => $folderName,
+                'parent_id' => $parentId,
+                'user_id'   => auth()->user()->id,
+                'path'      => $currentPath,
+            ]);
+
+            $folderCache[$currentPath] = $folder->id;
+            $parentId = $folder->id;
+        }
+
+        // last folder is the parent
+        return $parentId;
     }
 }
