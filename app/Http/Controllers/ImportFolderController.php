@@ -7,7 +7,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ImportFolderRequest;
 use App\Models\Folder;
 use App\Services\ImportFolderService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Inertia\Response;
 
@@ -27,29 +29,14 @@ class ImportFolderController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function store(ImportFolderRequest $request, ImportFolderService $importFolderService)
+    public function store(ImportFolderRequest $request, ImportFolderService $importFolderService): RedirectResponse
     {
+        /** @var array{files: array<UploadedFile>, paths: array<string>, base_folder_id: string} $input */
         $input = $request->validated();
-        Log::debug('input', $input);
+        Log::debug('import folder input:', ['input' => $input]);
+
         $importFolderService->handle($input['files'], $input['paths'], $input['base_folder_id']);
 
         return to_route('folders.index');
-        // $user = auth()->user();
-        // $baseParentFolder = Folder::query()
-        //     ->where('user_id', $user->id)
-        //     ->where('uuid', $input['base_folder_id'])
-        //     ->firstOrFail();
-
-        // $folderMap = []; // path => Folder model
-        // $folderMap[''] = $baseParentFolder;
-
-        // foreach ($input['files'] as $file) {
-        //     // extract folder path & filename
-        //     $relativePath = $file->getClientOriginalName(); // sub1/sub2/file.txt
-
-        //     // create each folder if not exists in the path
-
-        //     // create & store file
-        // }
     }
 }

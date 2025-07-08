@@ -26,8 +26,10 @@ class ImportFolderRequest extends FormRequest
     {
         return [
             'base_folder_id' => ['required', Rule::exists('folders', 'uuid')],
+
             'files'          => ['required', 'array'],
             'files.*'        => ['required', 'file'],
+
             'paths'          => ['required', 'array'],
             'paths.*'        => ['required', 'string'],
         ];
