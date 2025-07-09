@@ -2,6 +2,7 @@ import { Head } from '@inertiajs/react';
 import { LucideDownload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { useFileSize } from '@/hooks/use-file-size';
 import AppLayout from '@/layouts/app-layout';
 import { DriveFile } from '@/types/folder';
 
@@ -10,6 +11,7 @@ interface RecentFilesProps {
 }
 
 export default function RecentFiles({ recentFiles }: RecentFilesProps) {
+    const fileSize = useFileSize();
     return (
         <AppLayout>
             <Head title="Recent Files" />
@@ -25,7 +27,7 @@ export default function RecentFiles({ recentFiles }: RecentFilesProps) {
                                 <div>
                                     <p className="font-medium">{file.original_name}</p>
                                     <p className="text-sm text-gray-500">
-                                        {(file.size / 1024).toFixed(1)} KB — {file.mime_type}
+                                        {fileSize(file.size)} — {file.mime_type}
                                     </p>
                                 </div>
                                 <Button variant="link" size="sm">
