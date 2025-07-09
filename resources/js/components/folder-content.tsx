@@ -1,4 +1,6 @@
+import { router } from '@inertiajs/react';
 import { FolderIcon, LucideDelete, LucideTrash } from 'lucide-react';
+import { toast } from 'sonner';
 import { useFolderContext } from '@/contexts/folder-context';
 import { Folder } from '@/types/folder';
 import { FileList } from './drive-file/file-list';
@@ -10,6 +12,17 @@ export function FolderContent() {
 
     const handleSelectFolder = (newSelectedFolder: Folder) => () => {
         loadFolder(newSelectedFolder.uuid);
+    };
+
+    const handleDeleteFolder = () => {
+        if (confirm('Are you sure you want to delete this folder?')) {
+            router.delete(route('folders.destroy', folder?.uuid), {
+                onSuccess: () => {
+                    loadFolder(folder?.parent?.uuid || '');
+                    toast.success('Folder deleted successfully!');
+                },
+            });
+        }
     };
 
     if (!folder) {
@@ -26,11 +39,8 @@ export function FolderContent() {
                     <p>Created: {folder.created_at}</p>
                     <p>Last updated: {folder.updated_at}</p>
                 </div>
-                <Button variant="destructive" className="hover:bg-red-700">
-                    <a href={route('folders.destroy', folder.uuid)} className="flex items-center">
-                        <LucideTrash className="mr-2" />
-                        Delete
-                    </a>
+                <Button variant="destructive" className="hover:bg-red-700" onClick={handleDeleteFolder}>
+                    <LucideTrash className="mr-2" />
                 </Button>
             </div>
 

@@ -88,7 +88,7 @@ class FolderController extends Controller
      */
     public function load(Folder $folder): JsonResponse
     {
-        $folder->load(['children', 'files']);
+        $folder->load(['children', 'files', 'parent']);
 
         return response()->json([
             'folder' => $folder,

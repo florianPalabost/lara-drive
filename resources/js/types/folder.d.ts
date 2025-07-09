@@ -2,11 +2,13 @@ export interface Folder {
     id: number;
     uuid: string;
     name: string;
+    path: string;
     parent_id: string | null;
     created_at: string;
     updated_at: string;
     children?: Array<Folder>;
     files?: Array<DriveFile>;
+    parent?: Folder;
 }
 
 export interface DriveFile {
