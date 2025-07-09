@@ -108,7 +108,12 @@ class FolderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateFolderRequest $request, Folder $folder) {}
+    public function update(UpdateFolderRequest $request, Folder $folder): RedirectResponse
+    {
+        $folder->update($request->validated());
+
+        return to_route('folders.index');
+    }
 
     /**
      * Remove the specified resource from storage.
