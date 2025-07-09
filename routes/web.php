@@ -6,6 +6,7 @@ use App\Http\Controllers\DownloadDriveFileController;
 use App\Http\Controllers\DriveFileController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ImportFolderController;
+use App\Http\Controllers\PreviewDriveFileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -24,6 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('folders', FolderController::class);
 
     Route::get('files/{uuid}/download', DownloadDriveFileController::class)->name('files.download');
+    Route::get('/files/{file}/preview', PreviewDriveFileController::class)->name('files.preview');
     Route::get('files/recent', [DriveFileController::class, 'recent'])->name('files.recent');
     Route::resource('files', DriveFileController::class);
 });

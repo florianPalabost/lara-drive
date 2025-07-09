@@ -65,7 +65,7 @@ class ImportFolderService
         $parentId = $parentFolder->id ?? null;
 
         foreach ($pathParts as $folderName) {
-            $currentPath .= ($currentPath ? '/' : '') . $folderName;
+            $currentPath .= ($currentPath !== '' && $currentPath !== '0' ? '/' : '') . $folderName;
 
             if (isset($folderCache[$currentPath])) {
                 $parentId = $folderCache[$currentPath];
