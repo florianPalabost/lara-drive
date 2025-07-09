@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/react';
-import { FolderIcon, LucideDelete, LucideTrash } from 'lucide-react';
+import { FolderIcon, LucideDelete, LucidePen, LucideTrash } from 'lucide-react';
 import { toast } from 'sonner';
 import { useFolderContext } from '@/contexts/folder-context';
 import { Folder } from '@/types/folder';
@@ -12,6 +12,10 @@ export function FolderContent() {
 
     const handleSelectFolder = (newSelectedFolder: Folder) => () => {
         loadFolder(newSelectedFolder.uuid);
+    };
+
+    const handleEdit = () => {
+        router.get(route('folders.edit', folder?.uuid));
     };
 
     const handleDeleteFolder = () => {
@@ -39,8 +43,11 @@ export function FolderContent() {
                     <p>Created: {folder.created_at}</p>
                     <p>Last updated: {folder.updated_at}</p>
                 </div>
+                <Button onClick={handleEdit} className="bg-orange-500 hover:bg-orange-600 mr-2">
+                    <LucidePen />
+                </Button>
                 <Button variant="destructive" className="hover:bg-red-700" onClick={handleDeleteFolder}>
-                    <LucideTrash className="mr-2" />
+                    <LucideTrash />
                 </Button>
             </div>
 
