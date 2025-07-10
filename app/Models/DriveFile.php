@@ -8,6 +8,7 @@ use App\Traits\HasUuidColumn;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DriveFile extends Model
 {
@@ -30,6 +31,14 @@ class DriveFile extends Model
     public function folder(): BelongsTo
     {
         return $this->belongsTo(Folder::class);
+    }
+
+    /**
+     * @return HasMany<DriveFileShare,$this>
+     */
+    public function shares(): HasMany
+    {
+        return $this->hasMany(DriveFileShare::class, 'drive_file_id');
     }
 
     /**
