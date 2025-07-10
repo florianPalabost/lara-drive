@@ -19,13 +19,11 @@ class FolderFactory extends Factory
      */
     public function definition(): array
     {
-        $filePath = storage_path('/' . $this->faker->word());
-
         return [
-            'name'       => $this->faker->name(),
-            'created_by' => User::inRandomOrder()->first()->uuid,
-            'parent_id'  => null,
-            'path'       => $filePath,
+            'name'      => fake()->name(),
+            'path'      => fake()->unique()->filePath(),
+            'parent_id' => null,
+            'user_id'   => User::first()->id ?? User::factory(),
         ];
     }
 }

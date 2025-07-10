@@ -2,42 +2,35 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\DownloadDriveFileController;
+use App\Http\Controllers\DriveFileController;
 use App\Http\Controllers\FolderController;
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\ImportFolderController;
+use App\Http\Controllers\PreviewDriveFileController;
+use App\Http\Controllers\SearchDriveFileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin'       => Route::has('login'),
-        'canRegister'    => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion'     => PHP_VERSION,
-    ]);
+    return Inertia::render('welcome');
+})->name('home');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('dashboard', function () {
+        return Inertia::render('dashboard');
+    })->name('dashboard');
+
+    Route::get('/folders/{folder:uuid}/load', [FolderController::class, 'load'])->name('folders.load');
+    Route::get('/folders/import', [ImportFolderController::class, 'import'])->name('folders.import');
+    Route::post('/folders/import', [ImportFolderController::class, 'store'])->name('folders.import.store');
+    Route::resource('folders', FolderController::class);
+
+    Route::get('files/{uuid}/download', DownloadDriveFileController::class)->name('files.download');
+    Route::get('/files/{file}/preview', PreviewDriveFileController::class)->name('files.preview');
+    Route::get('files/recent', [DriveFileController::class, 'recent'])->name('files.recent');
+    Route::get('files/search', SearchDriveFileController::class)->name('files.search');
+    Route::resource('files', DriveFileController::class);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-Route::resource('/folders', FolderController::class);
-
+require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

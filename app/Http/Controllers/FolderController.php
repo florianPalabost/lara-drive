@@ -4,78 +4,132 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Folder\StoreFolderRequest;
-use App\Http\Requests\Folder\UpdateFolderRequest;
+use App\Http\Requests\StoreFolderRequest;
+use App\Http\Requests\UpdateFolderRequest;
 use App\Models\Folder;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Response;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class FolderController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        // no paginate since the root folders should not be paginated
-        $folderTree = Folder::withDepth()
-            ->whereIsRoot()
-            ->get()
-            ->toTree();
+        $folders = Folder::query()->whereNull('parent_id')
+            ->with('children', 'files')
+            ->where('user_id', auth()->user()->id)
+            ->orderBy('name')
+            ->get();
 
-        // Todo: see Inertia
-        return inertia('Folders/Index', ['folderTree' => $folderTree]);
+        return inertia('folders/index', [
+            'folders' => $folders,
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create(Request $request): Response
+    {
+        $resultData = [];
+        $folder = $request->get('folder');
+
+        if ($folder) {
+            $folder = Folder::query()
+                ->where('uuid', $folder)
+                ->firstOrFail();
+
+            $resultData['parent'] = $folder;
+        }
+
+        return inertia('folders/create', $resultData);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    // public function store(StoreFolderRequest $request)
-    // {
-    //     $input = $request->validated();
-
-    //     if ($input['parent_id']) {
-    //         $parentFolder = Folder::find($input['parent_id'])->first();
-    //         $folder       = $parentFolder->children()->create($input);
-    //     } else {
-    //         $folder = Folder::create($request->validated());
-    //     }
-
-    //     return $folder;
-    // }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Folder $folder)
+    public function store(StoreFolderRequest $request): RedirectResponse
     {
-        $folder = QueryBuilder::for(Folder::class)
-            ->allowedIncludes(['children'])
-            ->findOrFail($folder->id);
+        $input = $request->validated();
+        $parentFolder = null;
 
-        // TODO: Inertia view
-        return $folder;
+        if (Arr::has($input, 'parent_id') && $input['parent_id']) {
+            $parentFolder = Folder::query()
+                ->where('uuid', $input['parent_id'])
+                ->firstOrFail();
+        }
+
+        $folderPath = match (true) {
+            $parentFolder && $parentFolder->parent_id => $parentFolder->path . '/' . $parentFolder->uuid,
+            $parentFolder                             => '/' . $parentFolder->uuid,
+            default                                   => '/',
+        };
+
+        $folder = Folder::create([
+            ...$input,
+            'parent_id' => $parentFolder->id ?? null,
+            'path'      => $folderPath,
+            'user_id'   => auth()->user()->id,
+        ]);
+
+        return to_route('folders.index', ['folder' => $folder]);
     }
 
-    // TODO: edit Inertia view
+    /**
+     * TODO: move to dedicate controller
+     * Display the specified resource.
+     */
+    public function load(Folder $folder): JsonResponse
+    {
+        $folder->load(['children', 'files', 'parent']);
+
+        return response()->json([
+            'folder' => $folder,
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Folder $folder): Response
+    {
+        return inertia('folders/edit', [
+            'folder' => $folder,
+        ]);
+    }
 
     /**
      * Update the specified resource in storage.
      */
-    // public function update(UpdateFolderRequest $request, Folder $folder)
-    // {
-    //     $folder->update($request->validated());
+    public function update(UpdateFolderRequest $request, Folder $folder): RedirectResponse
+    {
+        $folder->update($request->validated());
 
-    //     return $folder;
-    // }
+        return to_route('folders.index');
+    }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Folder $folder)
+    public function destroy(Folder $folder): RedirectResponse
     {
-        Folder::destroy($folder->id);
+        // TODO: need to also delete folder from storage ?
+        // may need to keep folder in storage in case of restore ?
+        try {
+            Storage::disk('minio')->deleteDirectory($folder->path);
+            $folder->delete();
+        }
+        catch (Exception $exception) {
+            report($exception);
+        }
 
-        return response()->noContent();
+        return to_route('folders.index');
     }
 }
