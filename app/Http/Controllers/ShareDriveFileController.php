@@ -8,17 +8,16 @@ use App\Actions\CreateNewDriveFileShare;
 use App\Http\Requests\ShareDriveFileRequest;
 use App\Models\DriveFile;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\URL;
-use Symfony\Component\HttpFoundation\Response;
 
 class ShareDriveFileController extends Controller
 {
     /**
      * Handle the incoming request.
      */
-    public function __invoke(ShareDriveFileRequest $request, DriveFile $file, CreateNewDriveFileShare $createNewDriveFileShareAction): Response
+    public function __invoke(ShareDriveFileRequest $request, DriveFile $file, CreateNewDriveFileShare $createNewDriveFileShareAction): JsonResponse
     {
         $input = $request->validated();
         $sharedWithUser = User::query()->where('user_email', $input['user_email'])->first();
