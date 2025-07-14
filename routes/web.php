@@ -8,6 +8,7 @@ use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ImportFolderController;
 use App\Http\Controllers\PreviewDriveFileController;
 use App\Http\Controllers\SearchDriveFileController;
+use App\Http\Controllers\SharedDriveFileController;
 use App\Http\Controllers\ShareDriveFileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -32,7 +33,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('files/recent', [DriveFileController::class, 'recent'])->name('files.recent');
     Route::get('files/search', SearchDriveFileController::class)->name('files.search');
     Route::resource('files', DriveFileController::class);
+
 });
+
+Route::get('files/share/{token}', SharedDriveFileController::class)->name('files.shared')->middleware('signed');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
