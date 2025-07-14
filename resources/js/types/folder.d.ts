@@ -22,3 +22,15 @@ export interface DriveFile {
     created_at: string;
     updated_at: string;
 }
+
+export interface FileShareResponse {
+    share: {
+        id: number;
+        user_id: number | null;
+        email: string | null;
+        permission: string;
+        expires_at: string | null;
+        public_token: string;
+    };
+    share_link: string;
+}

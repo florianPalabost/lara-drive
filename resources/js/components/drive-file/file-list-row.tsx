@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/react';
-import { LucideDownload, LucideEye, LucideTrash } from 'lucide-react';
+import { LucideDownload, LucideEye, LucideShare, LucideShare2, LucideTrash } from 'lucide-react';
 import { toast } from 'sonner';
 import { useFileSize } from '@/hooks/use-file-size';
 import { DriveFile } from '@/types/folder';
@@ -9,9 +9,10 @@ import { Button } from '../ui/button';
 interface FileListRowProps {
     file: DriveFile;
     onPreview: () => void;
+    onShare?: () => void;
 }
 
-export function FileListRow({ file, onPreview }: FileListRowProps) {
+export function FileListRow({ file, onPreview, onShare }: FileListRowProps) {
     const Icon = getFileIcon(file.mime_type);
     const fileSize = useFileSize();
     const isPreviewable = (mime: string) => mime.startsWith('image/') || mime === 'application/pdf';
@@ -25,6 +26,7 @@ export function FileListRow({ file, onPreview }: FileListRowProps) {
             });
         }
     };
+
     return (
         <div key={file.id} className="flex items-center justify-between p-3 border rounded bg-white shadow-sm hover:bg-gray-50 transition">
             <div>
@@ -37,17 +39,21 @@ export function FileListRow({ file, onPreview }: FileListRowProps) {
                 </p>
             </div>
             <div className="flex items-center space-x-2">
+                {isPreviewable(file.mime_type) && (
+                    <Button variant="ghost" onClick={onPreview}>
+                        <LucideEye />
+                    </Button>
+                )}
+
                 <Button variant="ghost">
                     <a href={route('files.download', file.uuid)} className="text-sm text-blue-600 hover:underline" download>
                         <LucideDownload />
                     </a>
                 </Button>
 
-                {isPreviewable(file.mime_type) && (
-                    <Button onClick={onPreview} variant="ghost">
-                        <LucideEye />
-                    </Button>
-                )}
+                <Button variant="ghost" onClick={onShare}>
+                    <LucideShare2 />
+                </Button>
 
                 <Button variant="ghost" onClick={handleDeleteFile(file)}>
                     <LucideTrash color="red" />
