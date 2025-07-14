@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('shared_with_user_id')->nullable()->constrained('users')->cascadeOnDelete();
 
             $table->uuid('public_token')->nullable()->unique();
-            $table->string('permission')->nullable();
+            $table->string('permission', 20)->nullable();
             $table->dateTime('expires_at');
 
             $table->timestamps();
