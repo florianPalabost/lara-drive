@@ -15,7 +15,7 @@ class ShareDriveFileRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return auth()->user()->id === request()->route('file')->user_id;
     }
 
     /**

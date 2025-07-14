@@ -20,10 +20,6 @@ class ShareDriveFileController extends Controller
      */
     public function __invoke(ShareDriveFileRequest $request, DriveFile $file, CreateNewDriveFileShare $createNewDriveFileShareAction): Response
     {
-        $user = auth()->user();
-
-        abort_if($file->user_id !== $user->id, Response::HTTP_FORBIDDEN);
-
         $input = $request->validated();
         $sharedWithUser = User::query()->where('user_email', $input['user_email'])->first();
 
