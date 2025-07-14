@@ -10,14 +10,28 @@ export default function FileUpload() {
     const { selectedFolder, loadFolder } = useFolderContext();
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const { data, setData, post, processing, errors, reset, progress } = useForm({
+    const { data, setData, post, processing, errors, reset, progress, setError, clearErrors } = useForm({
         file: null as File | null,
         folder_id: null as string | null,
     });
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        if (file) setData({ file, folder_id: selectedFolder?.uuid ?? null });
+
+        if (!file) return;
+
+        if (errors.file) {
+            clearErrors('file');
+        }
+
+        if (file.size > 100 * 1024 * 1024) {
+            setError('file', 'File size must be less than 100MB');
+            toast.error('File size must be less than 100MB');
+
+            return;
+        }
+
+        setData({ file, folder_id: selectedFolder?.uuid ?? null });
     };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
