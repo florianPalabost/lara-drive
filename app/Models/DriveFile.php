@@ -49,6 +49,19 @@ class DriveFile extends Model
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * @return HasMany<DriveFileVersion,$this>
+     */
+    public function versions(): HasMany
+    {
+        return $this->hasMany(DriveFileVersion::class);
+    }
+
+    public function currentVersion()
+    {
+        return $this->hasOne(DriveFileVersion::class)->where('is_current', true);
+    }
+
     public function getRouteKeyName(): string
     {
         return 'uuid';
