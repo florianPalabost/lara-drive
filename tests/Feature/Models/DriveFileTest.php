@@ -6,6 +6,8 @@ use App\Models\DriveFile;
 use App\Models\Folder;
 use App\Models\User;
 
+pest()->group('models');
+
 describe('Models > DriveFile', function () {
     it('should belongs to a folder', function () {
         // Arranage
@@ -32,4 +34,4 @@ describe('Models > DriveFile', function () {
         // Assert
         expect($file->user->id)->toBe($user->id);
     });
-})->group('models');
+});
