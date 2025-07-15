@@ -17,12 +17,8 @@ return new class extends Migration
             $table->id();
             $table->uuid()->unique();
             $table->foreignId('folder_id')->constrained()->cascadeOnDelete();
-            $table->string('original_name');
-            $table->string('mime_type');
-            $table->unsignedBigInteger('size');
-            $table->string('path');
-
             $table->foreignId('user_id')->constrained(); // is it necessary?
+            $table->string('original_name');
 
             $table->unique(['folder_id', 'original_name']);
 

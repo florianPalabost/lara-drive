@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/react';
-import { LucideDownload, LucideEye, LucideShare, LucideShare2, LucideTrash } from 'lucide-react';
+import { LucideDownload, LucideEye, LucideHistory, LucideShare, LucideShare2, LucideTrash } from 'lucide-react';
 import { toast } from 'sonner';
 import { useFileSize } from '@/hooks/use-file-size';
 import { DriveFile } from '@/types/folder';
@@ -16,6 +16,10 @@ export function FileListRow({ file, onPreview, onShare }: FileListRowProps) {
     const Icon = getFileIcon(file.mime_type);
     const fileSize = useFileSize();
     const isPreviewable = (mime: string) => mime.startsWith('image/') || mime === 'application/pdf';
+
+    const onViewHistory = () => {
+        router.get(route('files.versions', file.uuid));
+    };
 
     const handleDeleteFile = (file: DriveFile) => () => {
         if (confirm('Are you sure you want to delete this file?')) {
@@ -44,6 +48,10 @@ export function FileListRow({ file, onPreview, onShare }: FileListRowProps) {
                         <LucideEye />
                     </Button>
                 )}
+
+                <Button variant="ghost" onClick={onViewHistory}>
+                    <LucideHistory />
+                </Button>
 
                 <Button variant="ghost">
                     <a href={route('files.download', file.uuid)} className="text-sm text-blue-600 hover:underline" download>

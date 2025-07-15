@@ -16,11 +16,13 @@ return new class extends Migration
         Schema::create('drive_file_versions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('drive_file_id')->constrained()->cascadeOnDelete();
-            $table->string('path');
-            $table->unsignedInteger('version');
-            $table->boolean('is_current')->default(false);
-            $table->unsignedBigInteger('size');
+
+            $table->unsignedInteger('version')->default(1);
+            $table->boolean('is_current')->default(true);
+
             $table->string('mime_type');
+            $table->unsignedBigInteger('size');
+            $table->string('path');
             $table->timestamps();
 
             $table->unique(['drive_file_id', 'version']);

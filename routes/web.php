@@ -10,6 +10,7 @@ use App\Http\Controllers\PreviewDriveFileController;
 use App\Http\Controllers\SearchDriveFileController;
 use App\Http\Controllers\SharedDriveFileController;
 use App\Http\Controllers\ShareDriveFileController;
+use App\Http\Controllers\ShowDriveFileVersions;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -30,6 +31,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('files/{uuid}/download', DownloadDriveFileController::class)->name('files.download');
     Route::get('/files/{file}/preview', PreviewDriveFileController::class)->name('files.preview');
     Route::post('files/{file}/share', ShareDriveFileController::class)->name('files.share');
+    Route::get('/files/{file}/versions', ShowDriveFileVersions::class)->name('files.versions');
+
     Route::get('files/recent', [DriveFileController::class, 'recent'])->name('files.recent');
     Route::get('files/search', SearchDriveFileController::class)->name('files.search');
     Route::resource('files', DriveFileController::class);
