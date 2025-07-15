@@ -13,7 +13,7 @@ interface FileListRowProps {
 }
 
 export function FileListRow({ file, onPreview, onShare }: FileListRowProps) {
-    const Icon = getFileIcon(file.mime_type);
+    const Icon = getFileIcon(file.current_version.mime_type);
     const fileSize = useFileSize();
     const isPreviewable = (mime: string) => mime.startsWith('image/') || mime === 'application/pdf';
 
@@ -39,11 +39,11 @@ export function FileListRow({ file, onPreview, onShare }: FileListRowProps) {
             <div>
                 <p className="font-medium">{file.original_name}</p>
                 <p className="text-sm text-gray-500">
-                    {file.mime_type} — {fileSize(file.size)}
+                    {file.current_version.mime_type} — {fileSize(file.current_version.size)}
                 </p>
             </div>
             <div className="flex items-center space-x-2">
-                {isPreviewable(file.mime_type) && (
+                {isPreviewable(file.current_version.mime_type) && (
                     <Button variant="ghost" onClick={onPreview}>
                         <LucideEye />
                     </Button>

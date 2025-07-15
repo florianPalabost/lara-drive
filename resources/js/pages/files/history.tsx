@@ -1,8 +1,8 @@
+import { Head } from '@inertiajs/react';
 import { FileList } from '@/components/drive-file/file-list';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { DriveFile } from '@/types/folder';
-import { Head } from '@inertiajs/react';
 
 interface FilesHistoryProps {
     file: DriveFile;

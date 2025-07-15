@@ -17,15 +17,17 @@ class PreviewDriveFileController extends Controller
      */
     public function __invoke(Request $request, DriveFile $file): StreamedResponse
     {
-        abort_unless(Storage::disk('minio')->exists($file->path), Response::HTTP_NOT_FOUND, 'File not found in storage.');
+        $file->load('currentVersion');
+
+        abort_unless(Storage::disk('minio')->exists($file->currentVersion->path), Response::HTTP_NOT_FOUND, 'File not found in storage.');
         $disk = Storage::disk('minio');
-        $stream = $disk->readStream($file->path);
+        $stream = $disk->readStream($file->currentVersion->path);
 
         return response()->stream(
             callback: function () use ($stream) {
                 fpassthru($stream);
             }, headers: [
-                'Content-Type'        => $file->mime_type,
+                'Content-Type'        => $file->currentVersion->mime_type,
                 'Content-Disposition' => sprintf('inline; filename="%s"', $file->original_name),
             ]
         );
