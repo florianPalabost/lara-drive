@@ -41,7 +41,7 @@ class ImportFolderService
                     ->where('id', $folderId)
                     ->firstOrFail();
 
-                $newFiles[] = (new CreateNewDriveFile)->handle([
+                $newFiles[] = app(CreateNewDriveFile::class)->handle([
                     'folder_id' => $folder->uuid,
                     'file'      => $file,
                 ]);
