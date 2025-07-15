@@ -1,10 +1,21 @@
 import { useApi } from '@/hooks/use-api';
-import { FileShareResponse } from '@/types/folder';
 
 interface FileSharePayload {
     user_email: string | null;
     permission: string;
     expires_in: string | null;
+}
+
+export interface FileShareResponse {
+    share: {
+        id: number;
+        user_id: number | null;
+        email: string | null;
+        permission: string;
+        expires_at: string | null;
+        public_token: string;
+    };
+    share_link: string;
 }
 
 export async function shareFile(data: FileSharePayload, fileId: string): Promise<FileShareResponse> {

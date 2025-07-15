@@ -11,26 +11,22 @@ export interface Folder {
     parent?: Folder;
 }
 
+export interface DriveFileVersion {
+    id: number;
+    file_id: number;
+    size: number;
+    path: string;
+    mime_type: string;
+    created_at: string;
+    updated_at: string;
+}
+
 export interface DriveFile {
     id: number;
     uuid: string;
     folder_id: number;
     original_name: string;
-    mime_type: string;
-    size: number;
-    path: string;
+    current_version: DriveFileVersion;
     created_at: string;
     updated_at: string;
-}
-
-export interface FileShareResponse {
-    share: {
-        id: number;
-        user_id: number | null;
-        email: string | null;
-        permission: string;
-        expires_at: string | null;
-        public_token: string;
-    };
-    share_link: string;
 }
