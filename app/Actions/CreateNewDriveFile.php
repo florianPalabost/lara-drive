@@ -7,10 +7,13 @@ namespace App\Actions;
 use App\Models\DriveFile;
 use App\Models\Folder;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
 class CreateNewDriveFile
 {
+    public function __construct(protected CreateNewDriveFileVersion $createNewDriveFileVersionAction) {}
+
     /**
      * @param array{folder_id: string, file: UploadedFile|null} $data
      */
@@ -33,14 +36,22 @@ class CreateNewDriveFile
         // store file in storage
         $storedPath = $uploadedFile->storeAs($path, $uploadedFile->getClientOriginalName(), ['disk' => 'minio']);
 
-        // store file in database
-        return DriveFile::create([
-            'folder_id'     => $folder->id,
-            'original_name' => $data['file']->getClientOriginalName(),
-            'mime_type'     => $data['file']->getClientMimeType(),
-            'size'          => $data['file']->getSize(),
-            'path'          => $storedPath,
-            'user_id'       => $user->id,
-        ]);
+        return DB::transaction(function () use ($folder, $user, $storedPath, $data): DriveFile {
+            $driveFile = DriveFile::create([
+                'folder_id'     => $folder->id,
+                'original_name' => $data['file']->getClientOriginalName(),
+                'user_id'       => $user->id,
+            ]);
+
+            $driveFile->refresh();
+
+            $this->createNewDriveFileVersionAction->handle($driveFile, [
+                'mime_type' => $data['file']->getClientMimeType(),
+                'size'      => $data['file']->getSize(),
+                'path'      => $storedPath,
+            ]);
+
+            return $driveFile;
+        });
     }
 }
