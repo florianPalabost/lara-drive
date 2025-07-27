@@ -13,12 +13,13 @@ interface FileListRowProps {
 }
 
 export function FileListRow({ file, onPreview, onShare }: FileListRowProps) {
+    console.debug('file', file);
     const Icon = getFileIcon(file.current_version.mime_type);
     const fileSize = useFileSize();
     const isPreviewable = (mime: string) => mime.startsWith('image/') || mime === 'application/pdf';
 
     const onViewHistory = () => {
-        router.get(route('files.versions', file.uuid));
+        router.get(route('files.versions.index', file.uuid));
     };
 
     const handleDeleteFile = (file: DriveFile) => () => {

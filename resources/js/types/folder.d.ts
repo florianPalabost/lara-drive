@@ -16,6 +16,8 @@ export interface DriveFileVersion {
     file_id: number;
     size: number;
     path: string;
+    version: number;
+    is_current: boolean;
     mime_type: string;
     created_at: string;
     updated_at: string;

@@ -1,12 +1,11 @@
-import { Head } from '@inertiajs/react';
-import { FileList } from '@/components/drive-file/file-list';
+import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { DriveFile } from '@/types/folder';
+import { DriveFile, DriveFileVersion } from '@/types/folder';
 
 interface FilesHistoryProps {
     file: DriveFile;
-    versions: DriveFile[];
+    versions: DriveFileVersion[];
 }
 
 export default function FilesHistory({ file, versions }: FilesHistoryProps) {
@@ -30,8 +29,34 @@ export default function FilesHistory({ file, versions }: FilesHistoryProps) {
             <Head title={`Versions - ${file.original_name}`} />
             <div className="p-4 space-y-4">
                 <h1 className="text-2xl font-bold">Version History: {file.original_name}</h1>
-
-                <FileList files={versions} />
+                <table className="w-full text-left border">
+                    <thead className="bg-gray-100">
+                        <tr>
+                            <th className="p-2">Version</th>
+                            <th className="p-2">Size</th>
+                            <th className="p-2">Type</th>
+                            <th className="p-2">Uploaded At</th>
+                            <th className="p-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {versions.map((fileVersion) => (
+                            <tr key={fileVersion.id} className="border-t">
+                                <td className="p-2">
+                                    {fileVersion.version} {fileVersion.is_current && <span className="text-sm text-green-600 ml-2">(current)</span>}
+                                </td>
+                                <td className="p-2">{(fileVersion.size / 1024).toFixed(2)} KB</td>
+                                <td className="p-2">{fileVersion.mime_type}</td>
+                                <td className="p-2">{new Date(fileVersion.created_at).toLocaleString()}</td>
+                                <td className="p-2">
+                                    <Link href={route('files.preview', fileVersion.id)} className="text-blue-600 hover:underline">
+                                        Preview
+                                    </Link>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
         </AppLayout>
     );
