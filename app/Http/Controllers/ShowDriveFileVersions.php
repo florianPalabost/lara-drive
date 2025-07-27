@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\DriveFile;
+use Exception;
 use Illuminate\Http\Request;
 use Inertia\Response;
 
@@ -15,11 +16,6 @@ class ShowDriveFileVersions extends Controller
      */
     public function __invoke(Request $request, DriveFile $file): Response
     {
-        $file->load(['versions']);
-
-        return inertia('files/history', [
-            'file'     => $file,
-            'versions' => $file->versions,
-        ]);
+        throw new Exception('Not used');
     }
 }
