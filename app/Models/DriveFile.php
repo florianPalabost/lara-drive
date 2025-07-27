@@ -55,7 +55,7 @@ class DriveFile extends Model
      */
     public function versions(): HasMany
     {
-        return $this->hasMany(DriveFileVersion::class);
+        return $this->hasMany(DriveFileVersion::class)->orderBy('version', 'desc');
     }
 
     /**
