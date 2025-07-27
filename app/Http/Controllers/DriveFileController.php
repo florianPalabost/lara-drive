@@ -11,6 +11,7 @@ use App\Models\DriveFile;
 use App\Models\Folder;
 use Exception;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Response;
 
@@ -31,6 +32,7 @@ class DriveFileController extends Controller
      */
     public function store(StoreDriveFileRequest $request, CreateNewDriveFile $createNewDriveFileAction): RedirectResponse
     {
+        /** @var array{folder_id: string, file: UploadedFile} $input */
         $input = $request->validated();
         $uploadedFile = request()->file('file');
 

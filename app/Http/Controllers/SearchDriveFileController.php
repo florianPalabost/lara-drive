@@ -19,6 +19,7 @@ class SearchDriveFileController extends Controller
         $query = Str::lower((string) $request->validated('q'));
 
         $files = DriveFile::query()
+            ->with('currentVersion')
             ->where('user_id', auth()->user()->id)
             ->where('original_name', 'like', "%{$query}%")
             ->get();
