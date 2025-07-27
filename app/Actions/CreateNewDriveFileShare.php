@@ -39,6 +39,7 @@ class CreateNewDriveFileShare
             DriveFileShareExpiresAtEnum::ONE_DAY->value     => now()->addDay(),
             DriveFileShareExpiresAtEnum::SEVEN_DAYS->value  => now()->addWeek(),
             DriveFileShareExpiresAtEnum::THIRTY_DAYS->value => now()->addMonth(),
+            DriveFileShareExpiresAtEnum::NEVER->value       => now()->addCentury(),
             default                                         => null,
         };
     }
