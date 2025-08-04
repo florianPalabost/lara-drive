@@ -21,6 +21,7 @@ export interface DriveFileVersion {
     mime_type: string;
     created_at: string;
     updated_at: string;
+    file: DriveFile;
 }
 
 export interface DriveFile {

@@ -2,6 +2,8 @@ import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { DriveFile, DriveFileVersion } from '@/types/folder';
+import { useState } from 'react';
+import { FilePreviewDialog } from '@/components/drive-file/file-preview-dialog';
 
 interface FilesHistoryProps {
     file: DriveFile;
@@ -9,6 +11,7 @@ interface FilesHistoryProps {
 }
 
 export default function FilesHistory({ file, versions }: FilesHistoryProps) {
+    const [previewFile, setPreviewFile] = useState<DriveFileVersion | null>(null);
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Files',
@@ -23,6 +26,10 @@ export default function FilesHistory({ file, versions }: FilesHistoryProps) {
             href: `/files/${file.uuid}/history`,
         },
     ];
+
+    const handlePreviewFile = (fileVersion: DriveFileVersion) => () => {
+        setPreviewFile(fileVersion);
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -49,15 +56,22 @@ export default function FilesHistory({ file, versions }: FilesHistoryProps) {
                                 <td className="p-2">{fileVersion.mime_type}</td>
                                 <td className="p-2">{new Date(fileVersion.created_at).toLocaleString()}</td>
                                 <td className="p-2">
-                                    <Link href={route('files.preview', fileVersion.id)} className="text-blue-600 hover:underline">
+                                    <button onClick={handlePreviewFile(fileVersion)} className="ml-2 text-blue-600 hover:underline">
                                         Preview
-                                    </Link>
+                                    </button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+            {previewFile && (
+                <FilePreviewDialog
+                    open={!!previewFile}
+                    onOpenChange={(open) => setPreviewFile(open ? previewFile : null)}
+                    fileVersion={previewFile}
+                />
+            )}
         </AppLayout>
     );
 }

@@ -20,7 +20,7 @@ class DriveFileVersionController extends Controller
      */
     public function index(DriveFile $file): Response
     {
-        $file->load(['versions']);
+        $file->load(['versions', 'versions.file', 'versions.file.currentVersion']);
 
         return inertia('files/history', [
             'file'     => $file,
