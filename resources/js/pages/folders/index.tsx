@@ -5,6 +5,7 @@ import { FolderProvider } from '@/contexts/folder-context';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Folder } from '@/types/folder';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 interface FolderIndexProps {
     folders: Array<Folder>;
@@ -25,7 +26,9 @@ export default function FolderIndex({ folders }: FolderIndexProps) {
             <div className="mb-4 flex h-full gap-4">
                 <FolderProvider initialFolders={folders}>
                     <FolderTree />
-                    <FolderContent />
+                    <ErrorBoundary fallback={<p>There was an issue displaying folder content.</p>}>
+                        <FolderContent />
+                    </ErrorBoundary>
                 </FolderProvider>
             </div>
         </AppLayout>
