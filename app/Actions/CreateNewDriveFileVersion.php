@@ -7,6 +7,7 @@ namespace App\Actions;
 use App\Models\DriveFile;
 use App\Models\DriveFileVersion;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 
 class CreateNewDriveFileVersion
 {
@@ -19,11 +20,12 @@ class CreateNewDriveFileVersion
         $user = auth()->user();
         $folder = $driveFile->folder;
 
+        $newVersionUuid = Str::uuid7()->toString();
         // create file path folder
         $path = sprintf('users/%s/folders/%s%s', $user->uuid, $folder->parent ? $folder->path . '/' . $folder->uuid : '', $folder->uuid);
 
         // store file in storage
-        $storedPath = $uploadedFile->storeAs($path, $uploadedFile->getClientOriginalName(), ['disk' => 'minio']);
+        $storedPath = $uploadedFile->storeAs($path, $newVersionUuid, ['disk' => 'minio']);
 
         $maxVersion = $driveFile->versions()->max('version');
 
@@ -32,6 +34,7 @@ class CreateNewDriveFileVersion
         }
 
         $payload = [
+            'uuid'       => $newVersionUuid,
             'is_current' => true,
             'mime_type'  => $uploadedFile->getClientMimeType(),
             'path'       => $storedPath,

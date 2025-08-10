@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('drive_file_versions', function (Blueprint $table) {
             $table->id();
+            $table->uuid()->unique();
             $table->foreignId('drive_file_id')->constrained()->cascadeOnDelete();
 
             $table->unsignedInteger('version')->default(1);

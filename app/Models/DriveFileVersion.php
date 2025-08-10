@@ -15,6 +15,7 @@ class DriveFileVersion extends Model
 
     /** @var list<string> */
     protected $fillable = [
+        'uuid',
         'drive_file_id',
         'path',
         'version',
