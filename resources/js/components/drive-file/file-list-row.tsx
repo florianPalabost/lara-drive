@@ -38,7 +38,9 @@ export function FileListRow({ file, onPreview, onShare }: FileListRowProps) {
                 <Icon className="w-6 h-6" />
             </div>
             <div>
-                <p className="font-medium">{file.original_name}</p>
+                <p className="font-medium">
+                    {file.original_name} <span className="text-gray-500"> (v{file.current_version.version})</span>
+                </p>
                 <p className="text-sm text-gray-500">
                     {file.current_version.mime_type} — {fileSize(file.current_version.size)}
                 </p>
