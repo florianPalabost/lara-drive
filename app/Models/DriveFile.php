@@ -63,7 +63,7 @@ class DriveFile extends Model
      */
     public function currentVersion(): HasOne
     {
-        return $this->hasOne(DriveFileVersion::class)->where('is_current', true);
+        return $this->hasOne(DriveFileVersion::class)->where('is_current', true)->latest();
     }
 
     public function getRouteKeyName(): string
