@@ -67,7 +67,8 @@ class DriveFileController extends Controller
     {
         // TODO: delete file from storage
         try {
-            Storage::disk('minio')->delete($file->path);
+            // Storage::disk('minio')->delete($file->path);
+            $file->versions()->delete();
             $file->delete();
         }
         catch (Exception $exception) {
