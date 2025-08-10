@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('mime_type');
             $table->unsignedBigInteger('size');
             $table->string('path');
-            $table->timestamps();
+            $table->timestampsTz();
 
             $table->unique(['drive_file_id', 'version']);
         });

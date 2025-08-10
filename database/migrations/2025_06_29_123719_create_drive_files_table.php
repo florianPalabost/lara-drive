@@ -22,7 +22,7 @@ return new class extends Migration
 
             $table->unique(['folder_id', 'original_name']);
 
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

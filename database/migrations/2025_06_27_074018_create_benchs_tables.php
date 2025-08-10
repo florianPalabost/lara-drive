@@ -17,21 +17,21 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('parent_id')->nullable()->constrained('adjacency_folders')->onDelete('cascade');
-            $table->timestamps();
+            $table->timestampsTz();
         });
 
         Schema::create('nested_set_folders', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->nestedSet(); // adds _lft, _rgt, parent_id
-            $table->timestamps();
+            $table->timestampsTz();
         });
 
         Schema::create('materialized_path_folders', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('path')->index(); // e.g. /1/2/3
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

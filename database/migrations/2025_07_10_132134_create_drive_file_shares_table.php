@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('permission', 20)->nullable();
             $table->dateTime('expires_at');
 
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 
