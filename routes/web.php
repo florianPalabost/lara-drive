@@ -29,8 +29,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('folders', FolderController::class);
 
     Route::get('files/{uuid}/download', DownloadDriveFileController::class)->name('files.download');
-    Route::get('/files/{file}/preview', PreviewDriveFileController::class)->name('files.preview');
+    Route::get('/files/{file:uuid}/preview', PreviewDriveFileController::class)->name('files.preview');
     Route::post('files/{file}/share', ShareDriveFileController::class)->name('files.share');
+
     // TODO: see if shallow ?
     Route::resource('files.versions', DriveFileVersionController::class);
 

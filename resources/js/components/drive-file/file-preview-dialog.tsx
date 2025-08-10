@@ -18,16 +18,12 @@ export function FilePreviewDialog({ open, onOpenChange, fileVersion }: FilePrevi
                 </button>
             </DialogTrigger>
             <DialogContent className="!max-w-1/2 h-auto !p-2 rounded-lg shadow-lg bg-white dark:bg-gray-800">
-                <DialogTitle>Preview {fileVersion.file.original_name}</DialogTitle>
+                <DialogTitle>Preview</DialogTitle>
                 <div className="w-full h-[80vh]">
                     {fileVersion.mime_type.startsWith('image/') ? (
-                        <img
-                            src={route('files.preview', fileVersion.file.uuid)}
-                            alt={fileVersion.file.original_name}
-                            className="max-h-[75vh] mx-auto rounded"
-                        />
+                        <img src={route('files.preview', fileVersion.uuid)} alt="Image Preview" className="max-h-[75vh] mx-auto rounded" />
                     ) : fileVersion.mime_type === 'application/pdf' ? (
-                        <iframe src={route('files.preview', fileVersion.file.uuid)} className="w-full h-full border rounded" title="PDF Preview" />
+                        <iframe src={route('files.preview', fileVersion.uuid)} className="w-full h-full border rounded" title="PDF Preview" />
                     ) : null}
                 </div>
             </DialogContent>

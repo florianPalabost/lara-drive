@@ -13,6 +13,7 @@ export interface Folder {
 
 export interface DriveFileVersion {
     id: number;
+    uuid: string;
     file_id: number;
     size: number;
     path: string;
