@@ -16,12 +16,12 @@ class DownloadDriveFileController extends Controller
      */
     public function __invoke(Request $request, string $uuid): Response
     {
-        $file = DriveFile::query()->where('uuid', $uuid)->firstOrFail();
+        $file = DriveFile::query()->with('currentVersion')->where('uuid', $uuid)->firstOrFail();
 
-        abort_unless(Storage::disk('minio')->exists($file->path), Response::HTTP_NOT_FOUND, 'File not found in storage.');
+        abort_unless(Storage::disk('minio')->exists($file->currentVersion->path), Response::HTTP_NOT_FOUND, 'File not found in storage.');
 
-        return Storage::disk('minio')->download($file->path, $file->original_name, [
-            'Content-Type'        => $file->mime_type,
+        return Storage::disk('minio')->download($file->currentVersion->path, $file->original_name, [
+            'Content-Type'        => $file->currentVersion->mime_type,
             'Content-Disposition' => sprintf('attachment; filename="%s"', $file->original_name),
         ]);
     }
