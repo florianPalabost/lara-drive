@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\DownloadDriveFileController;
+use App\Http\Controllers\DownloadDriveFileVersionController;
 use App\Http\Controllers\DriveFileController;
 use App\Http\Controllers\DriveFileVersionController;
 use App\Http\Controllers\FolderController;
@@ -33,6 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('files/{file}/share', ShareDriveFileController::class)->name('files.share');
 
     // TODO: see if shallow ?
+    Route::get('/files/{file:uuid}/versions/{version:uuid}/download', DownloadDriveFileVersionController::class)->name('files.versions.download');
     Route::resource('files.versions', DriveFileVersionController::class);
 
     Route::get('files/recent', [DriveFileController::class, 'recent'])->name('files.recent');
