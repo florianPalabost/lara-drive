@@ -9,7 +9,7 @@ import { Progress } from '../ui/progress';
 export function FolderImport() {
     const { selectedFolder } = useFolderContext();
     const inputRef = useRef<HTMLInputElement>(null);
-    const { data, setData, post, processing, errors, reset, progress } = useForm({
+    const { data, setData, post, processing, reset, progress } = useForm({
         files: [] as File[],
         paths: [] as string[],
         base_folder_id: null as string | null,

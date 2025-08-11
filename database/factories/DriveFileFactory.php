@@ -20,15 +20,10 @@ class DriveFileFactory extends Factory
      */
     public function definition(): array
     {
-        $file = fake()->file('files');
-
         return [
-            'uuid'          => Str::uuid()->toString(),
+            'uuid'          => Str::uuid7()->toString(),
             'folder_id'     => Folder::factory(),
-            'original_name' => basename($file),
-            'mime_type'     => mime_content_type($file),
-            'size'          => filesize($file),
-            'path'          => $file,
+            'original_name' => fake()->name(),
         ];
     }
 }

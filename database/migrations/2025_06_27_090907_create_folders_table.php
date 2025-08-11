@@ -25,7 +25,7 @@ return new class extends Migration
 
             // TODO: state: public, private
 
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

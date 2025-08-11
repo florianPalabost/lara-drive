@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\DownloadDriveFileController;
 use App\Http\Controllers\DriveFileController;
+use App\Http\Controllers\DriveFileVersionController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ImportFolderController;
 use App\Http\Controllers\PreviewDriveFileController;
@@ -28,8 +29,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('folders', FolderController::class);
 
     Route::get('files/{uuid}/download', DownloadDriveFileController::class)->name('files.download');
-    Route::get('/files/{file}/preview', PreviewDriveFileController::class)->name('files.preview');
+    Route::get('/files/{file:uuid}/preview', PreviewDriveFileController::class)->name('files.preview');
     Route::post('files/{file}/share', ShareDriveFileController::class)->name('files.share');
+
+    // TODO: see if shallow ?
+    Route::resource('files.versions', DriveFileVersionController::class);
+
     Route::get('files/recent', [DriveFileController::class, 'recent'])->name('files.recent');
     Route::get('files/search', SearchDriveFileController::class)->name('files.search');
     Route::resource('files', DriveFileController::class);

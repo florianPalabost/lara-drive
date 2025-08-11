@@ -16,6 +16,7 @@ describe('Models > DriveFile', function () {
         // Act
         $file = DriveFile::factory()->create([
             'folder_id' => $folder->id,
+            'user_id'   => $folder->user_id,
         ]);
 
         // Assert

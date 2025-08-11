@@ -13,16 +13,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('drive_file_shares', function (Blueprint $table) {
+        Schema::create('drive_file_versions', function (Blueprint $table) {
             $table->id();
+            $table->uuid()->unique();
             $table->foreignId('drive_file_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('shared_with_user_id')->nullable()->constrained('users')->cascadeOnDelete();
 
-            $table->uuid('public_token')->nullable()->unique();
-            $table->string('permission', 20)->nullable();
-            $table->dateTime('expires_at');
+            $table->unsignedInteger('version')->default(1);
+            $table->boolean('is_current')->default(true);
 
+            $table->string('mime_type');
+            $table->unsignedBigInteger('size');
+            $table->string('path');
             $table->timestampsTz();
+
+            $table->unique(['drive_file_id', 'version']);
         });
     }
 
@@ -31,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('drive_file_shares');
+        Schema::dropIfExists('drive_file_versions');
     }
 };

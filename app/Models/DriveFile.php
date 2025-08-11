@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class DriveFile extends Model
 {
@@ -19,9 +20,6 @@ class DriveFile extends Model
         'uuid',
         'folder_id',
         'original_name',
-        'mime_type',
-        'path',
-        'size',
         'user_id',
     ];
 
@@ -47,6 +45,22 @@ class DriveFile extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return HasMany<DriveFileVersion,$this>
+     */
+    public function versions(): HasMany
+    {
+        return $this->hasMany(DriveFileVersion::class)->orderBy('version', 'desc');
+    }
+
+    /**
+     * @return HasOne<DriveFileVersion,$this>
+     */
+    public function currentVersion(): HasOne
+    {
+        return $this->hasOne(DriveFileVersion::class)->where('is_current', true)->latest();
     }
 
     public function getRouteKeyName(): string

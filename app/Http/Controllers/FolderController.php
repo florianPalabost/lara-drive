@@ -23,7 +23,7 @@ class FolderController extends Controller
     public function index(Request $request): Response
     {
         $folders = Folder::query()->whereNull('parent_id')
-            ->with('children', 'files')
+            ->with('children', 'files', 'files.currentVersion')
             ->where('user_id', auth()->user()->id)
             ->orderBy('name')
             ->get();
@@ -88,7 +88,7 @@ class FolderController extends Controller
      */
     public function load(Folder $folder): JsonResponse
     {
-        $folder->load(['children', 'files', 'parent']);
+        $folder->load(['children', 'files', 'files.currentVersion', 'files.currentVersion.file', 'parent', 'children.files', 'children.files.currentVersion']);
 
         return response()->json([
             'folder' => $folder,

@@ -1,4 +1,5 @@
 import { Head } from '@inertiajs/react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { FolderContent } from '@/components/folder-content';
 import { FolderTree } from '@/components/folder-tree';
 import { FolderProvider } from '@/contexts/folder-context';
@@ -25,7 +26,9 @@ export default function FolderIndex({ folders }: FolderIndexProps) {
             <div className="mb-4 flex h-full gap-4">
                 <FolderProvider initialFolders={folders}>
                     <FolderTree />
-                    <FolderContent />
+                    <ErrorBoundary fallback={<p>There was an issue displaying folder content.</p>}>
+                        <FolderContent />
+                    </ErrorBoundary>
                 </FolderProvider>
             </div>
         </AppLayout>

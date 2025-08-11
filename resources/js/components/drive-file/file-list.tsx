@@ -31,7 +31,11 @@ export function FileList({ files }: FileListProps) {
             )}
 
             {previewFile && (
-                <FilePreviewDialog open={!!previewFile} onOpenChange={(open) => setPreviewFile(open ? previewFile : null)} file={previewFile} />
+                <FilePreviewDialog
+                    open={!!previewFile}
+                    onOpenChange={(open) => setPreviewFile(open ? previewFile : null)}
+                    fileVersion={previewFile.current_version}
+                />
             )}
 
             {shareFile && <FileShareDialog open={!!shareFile} onOpenChange={(open) => setShareFile(open ? shareFile : null)} file={shareFile} />}

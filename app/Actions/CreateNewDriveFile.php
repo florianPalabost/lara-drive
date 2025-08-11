@@ -7,10 +7,13 @@ namespace App\Actions;
 use App\Models\DriveFile;
 use App\Models\Folder;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
 class CreateNewDriveFile
 {
+    public function __construct(protected CreateNewDriveFileVersion $createNewDriveFileVersionAction) {}
+
     /**
      * @param array{folder_id: string, file: UploadedFile|null} $data
      */
@@ -27,20 +30,35 @@ class CreateNewDriveFile
 
         $user = auth()->user();
 
-        // create file path folder
-        $path = sprintf('users/%s/folders/%s%s', $user->uuid, $folder->parent ? $folder->path . '/' . $folder->uuid : '', $folder->uuid);
+        // ensure file not exists in this folder else just create a new version
+        $existingFile = DriveFile::query()
+            ->where('folder_id', $folder->id)
+            ->where('original_name', $uploadedFile->getClientOriginalName())
+            ->first();
 
-        // store file in storage
-        $storedPath = $uploadedFile->storeAs($path, $uploadedFile->getClientOriginalName(), ['disk' => 'minio']);
+        if ($existingFile) {
+            $this->createNewDriveFileVersionAction->handle($existingFile, $data);
 
-        // store file in database
-        return DriveFile::create([
-            'folder_id'     => $folder->id,
-            'original_name' => $data['file']->getClientOriginalName(),
-            'mime_type'     => $data['file']->getClientMimeType(),
-            'size'          => $data['file']->getSize(),
-            'path'          => $storedPath,
-            'user_id'       => $user->id,
-        ]);
+            return $existingFile;
+        }
+
+        return DB::transaction(function () use ($folder, $user, $data): DriveFile {
+            $driveFile = DriveFile::create([
+                'folder_id'     => $folder->id,
+                'original_name' => $data['file']->getClientOriginalName(),
+                'user_id'       => $user->id,
+            ]);
+
+            $driveFile->refresh();
+
+            $this->createNewDriveFileVersionAction->handle(
+                $driveFile,
+                [
+                    'file' => $data['file'],
+                ]
+            );
+
+            return $driveFile;
+        });
     }
 }
