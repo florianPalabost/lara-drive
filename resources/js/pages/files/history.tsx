@@ -1,9 +1,9 @@
 import { Head, Link } from '@inertiajs/react';
+import { useState } from 'react';
+import { FilePreviewDialog } from '@/components/drive-file/file-preview-dialog';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { DriveFile, DriveFileVersion } from '@/types/folder';
-import { useState } from 'react';
-import { FilePreviewDialog } from '@/components/drive-file/file-preview-dialog';
 
 interface FilesHistoryProps {
     file: DriveFile;

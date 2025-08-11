@@ -1,11 +1,11 @@
 import { Head } from '@inertiajs/react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { FolderContent } from '@/components/folder-content';
 import { FolderTree } from '@/components/folder-tree';
 import { FolderProvider } from '@/contexts/folder-context';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Folder } from '@/types/folder';
-import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 interface FolderIndexProps {
     folders: Array<Folder>;
