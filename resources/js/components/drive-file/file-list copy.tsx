@@ -1,9 +1,7 @@
-import { ColumnDef } from '@tanstack/react-table';
 import { LucideFolderInput } from 'lucide-react';
 import { useState } from 'react';
 import { DriveFile } from '@/types/folder';
 import { Button } from '../ui/button';
-// import { createDataTableComponent } from '../ui/data-table/data-table';
 import { FileListRow } from './file-list-row';
 import { FileMoveDialog } from './file-move-dialog';
 import { FilePreviewDialog } from './file-preview-dialog';
@@ -12,10 +10,6 @@ import { FileShareDialog } from './file-share-dialog';
 interface FileListProps {
     files: Array<DriveFile>;
 }
-
-// const DataTable = createDataTableComponent<DriveFile, unknown>();
-
-// const fileColumns: ColumnDef<DriveFile>[] = [];
 
 export function FileList({ files }: FileListProps) {
     const [previewFile, setPreviewFile] = useState<DriveFile | null>(null);

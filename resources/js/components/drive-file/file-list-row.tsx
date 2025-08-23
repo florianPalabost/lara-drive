@@ -1,5 +1,17 @@
 import { router } from '@inertiajs/react';
-import { LucideDownload, LucideEye, LucideHistory, LucideShare, LucideShare2, LucideTrash } from 'lucide-react';
+import {
+    LucideDownload,
+    LucideEye,
+    LucideFileSymlink,
+    LucideFiles,
+    LucideFolderInput,
+    LucideHistory,
+    LucideMove,
+    LucideMoveRight,
+    LucideShare,
+    LucideShare2,
+    LucideTrash,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { useFileSize } from '@/hooks/use-file-size';
 import { DriveFile } from '@/types/folder';
@@ -10,9 +22,10 @@ interface FileListRowProps {
     file: DriveFile;
     onPreview: () => void;
     onShare?: () => void;
+    onSelect?: () => void;
 }
 
-export function FileListRow({ file, onPreview, onShare }: FileListRowProps) {
+export function FileListRow({ file, onPreview, onShare, onSelect }: FileListRowProps) {
     console.debug('file', file);
     const Icon = getFileIcon(file.current_version.mime_type);
     const fileSize = useFileSize();
@@ -64,6 +77,10 @@ export function FileListRow({ file, onPreview, onShare }: FileListRowProps) {
 
                 <Button variant="ghost" onClick={onShare}>
                     <LucideShare2 />
+                </Button>
+
+                <Button variant="ghost" onClick={onSelect}>
+                    <LucideFolderInput />
                 </Button>
 
                 <Button variant="ghost" onClick={handleDeleteFile(file)}>

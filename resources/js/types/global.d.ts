@@ -1,7 +1,7 @@
-import type { route as routeFn, type RouteName } from 'ziggy-js';
+import type { type RouteName, route as routeFn } from 'ziggy-js';
 
 declare global {
-    var route: (name: RouteName, params?: Record<string, string>, absolute?: boolean) => ReturnType<typeof routeFn>;
+    var route: (name: RouteName, params?: any, absolute?: boolean) => ReturnType<typeof routeFn>;
 }
 
 export {};
