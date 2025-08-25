@@ -1,8 +1,7 @@
-// file: columns/fileVersionsColumns.tsx
 import { ColumnDef } from '@tanstack/react-table';
+import { SortableHeader } from '@/components/ui/data-table/sortable-header';
 import { DriveFileVersion } from '@/types/folder';
 import { FileVersionRowActions } from '../row-actions/file-version-row-actions';
-import { SortableHeader } from '../ui/data-table/sortable-header';
 
 export function fileVersionsColumns(): ColumnDef<DriveFileVersion>[] {
     return [

@@ -9,7 +9,8 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import * as React from "react";
+import { LucideArrowBigLeft, LucideChevronLeft, LucideChevronRight } from "lucide-react";
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -20,6 +21,8 @@ import {
 } from "@/components/ui/table";
 import { createDataTableContext } from "@/contexts/data-table-context";
 import { cn } from "@/lib/utils";
+import { Checkbox } from "../checkbox";
+import { IndeterminateCheckbox } from "./indeterminate-checkbox";
 
 export interface DataTableActions<TData> {
     onSelect?: (row: TData) => void;
@@ -39,9 +42,30 @@ export function createDataTableComponent<TData, TValue>() {
 
   // Root = provider only
   function Root({ columns, data, children, actions }: DataTableProps<TData, TValue>) {
-    const [sorting, setSorting] = React.useState<SortingState>([])
+
+    const defaultColumns: ColumnDef<TData, TValue>[] = [
+        {
+            id: 'select-col',
+            header: ({ table}) => (
+                <IndeterminateCheckbox
+                    checked={table.getIsAllRowsSelected()}
+                    indeterminate={table.getIsSomeRowsSelected()}
+                    onChange={table.getToggleAllRowsSelectedHandler()} //or getToggleAllPageRowsSelectedHandler
+                />
+            ),
+            cell: ({ row }) => (
+                <IndeterminateCheckbox
+                    checked={row.getIsSelected()}
+                    disabled={!row.getCanSelect()}
+                    onChange={row.getToggleSelectedHandler()}
+                />
+            ),
+        }
+    ];
+
+    const [sorting, setSorting] = useState<SortingState>([])
     const table = useReactTable<TData>({
-      columns,
+      columns: [...defaultColumns, ...columns],
       data,
       getCoreRowModel: getCoreRowModel(),
       getPaginationRowModel: getPaginationRowModel(),
@@ -51,6 +75,7 @@ export function createDataTableComponent<TData, TValue>() {
       state: {
         sorting,
       },
+      enableRowSelection: true
     });
 
     return (
@@ -97,6 +122,7 @@ export function createDataTableComponent<TData, TValue>() {
   function Body() {
     const { table } = useDataTableContext();
     const rows = table.getRowModel().rows;
+
     return (
       <TableBody>
         {rows.length ? (
@@ -130,7 +156,17 @@ export function createDataTableComponent<TData, TValue>() {
   function Pagination() {
     const { table } = useDataTableContext();
     return (
-      <div className="flex items-center justify-between p-2">
+    <div className="flex items-center justify-between border-t border-gray-200 bg-white py-3">
+      <div className="flex items-center justify-end space-x-2 p-2">
+        {
+            table.getPreSelectedRowModel().rows.length > 0 && (
+                <div className="text-sm">
+                   {table.getSelectedRowModel().rows.length} / {table.getPreSelectedRowModel().rows.length} row(s) selected
+                </div>
+            )
+        }
+      </div>
+      <div className="flex items-center justify-between p-2 space-x-2">
         <span className="text-sm">
           Page {table.getState().pagination.pageIndex + 1} of{" "}
           {table.getPageCount()}
@@ -140,16 +176,17 @@ export function createDataTableComponent<TData, TValue>() {
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            <LucideChevronLeft />
           </button>
           <button
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            <LucideChevronRight />
           </button>
         </div>
       </div>
+    </div>
     );
   }
 

@@ -1,10 +1,10 @@
 import { Head, Link } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
-import { fileVersionsColumns } from '@/components/data-table/file-versions-columns';
+import { fileVersionsColumns } from '@/components/data-table/columns/file-versions-columns';
 import FileVersionTable from '@/components/data-table/file-versions-table';
+import { DriveFileHistoryActions } from '@/components/data-table/row-actions/file-version-row-actions';
 import { FilePreviewDialog } from '@/components/drive-file/file-preview-dialog';
-import { DriveFileHistoryActions } from '@/components/row-actions/file-version-row-actions';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { DriveFile, DriveFileVersion } from '@/types/folder';

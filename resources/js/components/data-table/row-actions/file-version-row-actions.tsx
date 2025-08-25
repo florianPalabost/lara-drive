@@ -1,9 +1,9 @@
 import { LucideDownload, LucideEye, MoreHorizontal } from 'lucide-react';
 import { DriveFileVersion } from '@/types/folder';
-import { useFileVersionHistoryDataTableContext } from '../data-table/file-versions-table';
-import { Button } from '../ui/button';
-import { DataTableActions } from '../ui/data-table/data-table';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { Button } from '../../ui/button';
+import { DataTableActions } from '../../ui/data-table/data-table';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../ui/dropdown-menu';
+import { useFileVersionHistoryDataTableContext } from '../file-versions-table';
 
 export interface DriveFileHistoryActions extends DataTableActions<DriveFileVersion> {
     onPreviewFile?: (fileVersion: DriveFileVersion) => void;
@@ -14,7 +14,9 @@ interface FileVersionRowActionsProps {
 }
 
 export function FileVersionRowActions({ fileVersion }: FileVersionRowActionsProps) {
-    const { actions } = useFileVersionHistoryDataTableContext() as { actions: DriveFileHistoryActions };
+    const { actions } = useFileVersionHistoryDataTableContext() as {
+        actions: DriveFileHistoryActions;
+    };
 
     return (
         <DropdownMenu>

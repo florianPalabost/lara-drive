@@ -35,15 +35,15 @@ export function FileListRow({ file, onPreview, onShare, onSelect }: FileListRowP
         router.get(route('files.versions.index', file.uuid));
     };
 
-    const handleDeleteFile = (file: DriveFile) => () => {
-        if (confirm('Are you sure you want to delete this file?')) {
-            router.delete(route('files.destroy', file.uuid), {
-                onSuccess: () => {
-                    toast.success('File deleted successfully!');
-                },
-            });
-        }
-    };
+    // const handleDeleteFile = (file: DriveFile) => () => {
+    //     if (confirm("Are you sure you want to delete this file?")) {
+    //         router.delete(route("files.destroy", file.uuid), {
+    //             onSuccess: () => {
+    //                 toast.success("File deleted successfully!");
+    //             },
+    //         });
+    //     }
+    // };
 
     return (
         <div key={file.id} className="flex items-center justify-between p-3 border rounded bg-white shadow-sm hover:bg-gray-50 transition">
@@ -82,10 +82,10 @@ export function FileListRow({ file, onPreview, onShare, onSelect }: FileListRowP
                 <Button variant="ghost" onClick={onSelect}>
                     <LucideFolderInput />
                 </Button>
-
+                {/*
                 <Button variant="ghost" onClick={handleDeleteFile(file)}>
                     <LucideTrash color="red" />
-                </Button>
+                </Button> */}
             </div>
         </div>
     );
