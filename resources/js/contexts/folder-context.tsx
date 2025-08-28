@@ -1,8 +1,9 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { Folder } from '@/types/folder';
 
 interface FolderContextProps {
     folders: Folder[];
+    setFolders: (folders: Folder[]) => void;
     selectedFolder: Folder | null;
     setSelectedFolder: (folder: Folder | null) => void;
     updateFolderChildren: (updated: Folder) => void;
@@ -42,8 +43,21 @@ export function FolderProvider({ children, initialFolders, initialSelected = nul
         updateFolderChildren(folder);
     };
 
+    useEffect(() => {
+        setFolders(initialFolders); // ← update when prop changes
+    }, [initialFolders]);
+
     return (
-        <FolderContext.Provider value={{ folders, selectedFolder, setSelectedFolder, updateFolderChildren, loadFolder }}>
+        <FolderContext.Provider
+            value={{
+                folders,
+                setFolders,
+                selectedFolder,
+                setSelectedFolder,
+                updateFolderChildren,
+                loadFolder,
+            }}
+        >
             {children}
         </FolderContext.Provider>
     );

@@ -10,9 +10,6 @@ use Illuminate\Http\Request;
 
 class FolderTreePickerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function __invoke(Request $request): JsonResponse
     {
         $folders = Folder::query()

@@ -13,7 +13,7 @@ class FileAlreadyExistInTargetFolderException extends RuntimeException
     protected $code = 409;
 
     /** @var string */
-    protected $message = 'File %s already exist in target folder';
+    protected $message = 'File(s) `%s` already exist in target folder';
 
     public function __construct(string $fileName, ?Throwable $previous = null)
     {

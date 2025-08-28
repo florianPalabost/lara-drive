@@ -1,9 +1,16 @@
-import type { Table } from '@tanstack/react-table';
+import type { Row, Table } from '@tanstack/react-table';
 import { createContext, useContext } from 'react';
 import { DataTableActions } from '@/components/ui/data-table/data-table';
 
 export function createDataTableContext<TData>() {
-    const DataTableContext = createContext<{ table: Table<TData>; actions?: DataTableActions<TData> } | undefined>(undefined);
+    const DataTableContext = createContext<
+        | {
+              table: Table<TData>;
+              actions?: DataTableActions<TData>;
+              selectedRows: Row<TData>[];
+          }
+        | undefined
+    >(undefined);
 
     function useDataTableContext() {
         const context = useContext(DataTableContext);

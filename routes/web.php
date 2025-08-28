@@ -9,6 +9,7 @@ use App\Http\Controllers\DriveFileVersionController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\FolderTreePickerController;
 use App\Http\Controllers\ImportFolderController;
+use App\Http\Controllers\MoveDriveFileController;
 use App\Http\Controllers\PreviewDriveFileController;
 use App\Http\Controllers\SearchDriveFileController;
 use App\Http\Controllers\SharedDriveFileController;
@@ -34,6 +35,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('files/{uuid}/download', DownloadDriveFileController::class)->name('files.download');
     Route::get('/files/{file:uuid}/preview', PreviewDriveFileController::class)->name('files.preview');
     Route::post('files/{file}/share', ShareDriveFileController::class)->name('files.share');
+    Route::post('/files/move', MoveDriveFileController::class)->name('files.move');
 
     // TODO: see if shallow ?
     Route::get('/files/{file:uuid}/versions/{version:uuid}/download', DownloadDriveFileVersionController::class)->name('files.versions.download');

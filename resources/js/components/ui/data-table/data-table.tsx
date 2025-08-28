@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/table";
 import { createDataTableContext } from "@/contexts/data-table-context";
 import { cn } from "@/lib/utils";
-import { Checkbox } from "../checkbox";
 import { IndeterminateCheckbox } from "./indeterminate-checkbox";
 
 export interface DataTableActions<TData> {
@@ -79,7 +78,7 @@ export function createDataTableComponent<TData, TValue>() {
     });
 
     return (
-      <DataTableContext.Provider value={{ table, actions }}>
+      <DataTableContext.Provider value={{ table, actions, selectedRows: table.getSelectedRowModel().rows }}>
         {children}
       </DataTableContext.Provider>
     );
