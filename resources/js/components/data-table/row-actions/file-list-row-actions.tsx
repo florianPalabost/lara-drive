@@ -7,7 +7,7 @@ import { useFileVersionHistoryDataTableContext } from '../file-versions-table';
 
 export interface DriveFileListActions extends DataTableActions<DriveFileVersion> {
     onDeleteFile?: (file: DriveFile) => void;
-    onMoveFile?: (file: DriveFile) => void;
+    onMoveFiles?: (files: DriveFile[]) => void;
     onPreviewFile?: (fileVersion: DriveFileVersion) => void;
     onShareFile?: (file: DriveFile) => void;
     onViewHistory?: (file: DriveFile) => void;

@@ -25,7 +25,7 @@ export function FolderTree() {
         // Do nothing more if the folder is already loaded
         if (folderUuid === selectedFolder?.uuid) return;
 
-        loadFolder(folderUuid);
+        await loadFolder(folderUuid);
     };
 
     const handleImportFolder = () => {

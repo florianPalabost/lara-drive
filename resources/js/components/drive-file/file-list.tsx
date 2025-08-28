@@ -57,7 +57,7 @@ export function FileList({ files }: FileListProps) {
         [],
     );
     const actions: DriveFileListActions = {
-        onMoveFile: (file) => setMoveOpen(true),
+        onMoveFiles: (file) => setMoveOpen(true),
         onDeleteFile: handleDeleteFile,
         onPreviewFile: handlePreviewFile,
         onShareFile: (file) => setShareFile(file),
@@ -77,7 +77,16 @@ export function FileList({ files }: FileListProps) {
                 actions={actions}
             >
                 <FileVersionTable.Toolbar>
-                    <div className="flex items-center gap-2">TODO Toolbar</div>
+                    <div className="flex items-center gap-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setMoveOpen(true)}
+                        >
+                            <LucideFolderInput className="mr-2 h-4 w-4" />
+                            Move
+                        </Button>
+                    </div>
                 </FileVersionTable.Toolbar>
 
                 <FileVersionTable.View />

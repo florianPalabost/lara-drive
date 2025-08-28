@@ -7,6 +7,7 @@ use App\Http\Controllers\DownloadDriveFileVersionController;
 use App\Http\Controllers\DriveFileController;
 use App\Http\Controllers\DriveFileVersionController;
 use App\Http\Controllers\FolderController;
+use App\Http\Controllers\FolderTreePickerController;
 use App\Http\Controllers\ImportFolderController;
 use App\Http\Controllers\PreviewDriveFileController;
 use App\Http\Controllers\SearchDriveFileController;
@@ -27,6 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/folders/{folder:uuid}/load', [FolderController::class, 'load'])->name('folders.load');
     Route::get('/folders/import', [ImportFolderController::class, 'import'])->name('folders.import');
     Route::post('/folders/import', [ImportFolderController::class, 'store'])->name('folders.import.store');
+    Route::get('/folders/tree', FolderTreePickerController::class)->name('folders.tree');
     Route::resource('folders', FolderController::class);
 
     Route::get('files/{uuid}/download', DownloadDriveFileController::class)->name('files.download');
