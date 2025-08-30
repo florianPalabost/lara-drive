@@ -10,7 +10,7 @@ pest()->group('models');
 
 describe('Models > DriveFile', function () {
     it('should belongs to a folder', function () {
-        // Arranage
+        // Arrange
         $folder = Folder::factory()->create();
 
         // Act
@@ -24,7 +24,7 @@ describe('Models > DriveFile', function () {
     });
 
     it('should belongs to a user', function () {
-        // Arranage
+        // Arrange
         $user = User::factory()->create();
 
         // Act
