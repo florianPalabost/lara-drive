@@ -23,7 +23,7 @@ export function FileListToolbar({ onMove }: FileListToolbarProps) {
 
     return (
         <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={handleMoveClick}>
+            <Button variant="outline" size="sm" onClick={handleMoveClick} disabled={selectedRows.length === 0}>
                 <LucideFolderInput className="mr-2 h-4 w-4" />
                 Move
             </Button>
