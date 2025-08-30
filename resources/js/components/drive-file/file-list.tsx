@@ -1,15 +1,12 @@
 import { router } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { LucideFolderInput } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import FileVersionTable from '@/components/data-table/file-versions-table';
 import { DriveFile, DriveFileVersion } from '@/types/folder';
 import { fileListColumns } from '../data-table/columns/file-list-columns';
 import { DriveFileListActions } from '../data-table/row-actions/file-list-row-actions';
-import { Button } from '../ui/button';
-// import { createDataTableComponent } from '../ui/data-table/data-table';
-import { FileListRow } from './file-list-row';
+import { FileListToolbar } from './file-list-toolbar';
 import { FileMoveDialog } from './file-move-dialog';
 import { FilePreviewDialog } from './file-preview-dialog';
 import { FileShareDialog } from './file-share-dialog';
@@ -22,19 +19,10 @@ export function FileList({ files }: FileListProps) {
     const [previewFile, setPreviewFile] = useState<DriveFileVersion | null>(null);
     const [shareFile, setShareFile] = useState<DriveFile | null>(null);
     const [moveOpen, setMoveOpen] = useState(false);
-    // const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
-    // const allSelected = selectedFiles.length === files.length;
 
-    // const toggleSelect = (fileUuid: string) => {
-    //     setSelectedFiles((prev) =>
-    //         prev.includes(fileUuid)
-    //             ? prev.filter((id) => id !== fileUuid)
-    //             : [...prev, fileUuid],
-    //     );
-    // };
-    // const toggleSelectAll = () => {
-    //     setSelectedFiles(allSelected ? [] : files.map((f) => f.uuid));
-    // };
+    const handleMoveFiles = () => {
+        setMoveOpen(true);
+    };
 
     const handlePreviewFile = (file: DriveFileVersion) => {
         setPreviewFile(file);
@@ -45,6 +33,10 @@ export function FileList({ files }: FileListProps) {
             router.delete(route('files.destroy', file.uuid), {
                 onSuccess: () => {
                     toast.success('File deleted successfully!');
+                },
+                onError: (errors) => {
+                    toast.error('File delete failed!');
+                    console.error(errors);
                 },
             });
         }
@@ -67,17 +59,14 @@ export function FileList({ files }: FileListProps) {
         <div className="space-y-6">
             <FileVersionTable columns={columns} data={files.map((f) => f.current_version)} actions={actions}>
                 <FileVersionTable.Toolbar>
-                    <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm" onClick={() => setMoveOpen(true)}>
-                            <LucideFolderInput className="mr-2 h-4 w-4" />
-                            Move
-                        </Button>
-                    </div>
+                    <FileListToolbar onMove={handleMoveFiles} />
                 </FileVersionTable.Toolbar>
 
                 <FileVersionTable.View />
 
                 <FileVersionTable.Pagination />
+
+                {/* bulk modal actions */}
                 {moveOpen && <FileMoveDialog open={moveOpen} onOpenChange={setMoveOpen} />}
             </FileVersionTable>
 
