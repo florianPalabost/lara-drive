@@ -20,7 +20,7 @@ export function FileMoveDialog({ open, onOpenChange }: FileMoveDialogProps) {
     const { selectedRows } = useFileVersionHistoryDataTableContext();
 
     const { data, setData, post, processing } = useForm({
-        file_ids: selectedRows.map((row: Row<DriveFileVersion>) => row.original.uuid),
+        file_ids: selectedRows.map((row: Row<DriveFileVersion>) => row.original.file.uuid),
         target_folder_id: '',
     });
 
