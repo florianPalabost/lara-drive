@@ -8,23 +8,29 @@ use App\Exceptions\FileAlreadyExistInTargetFolderException;
 use App\Models\DriveFile;
 use App\Models\DriveFileVersion;
 use App\Models\Folder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Response;
 
 class MoveDriveFilesToFolder
 {
     /**
-     * @param DriveFile[] $driveFiles
+     * @param string[] $driveFileIds
      *
      * @throws FileAlreadyExistInTargetFolderException
      */
-    public function handle(array $driveFiles, Folder $targetFolder): void
+    public function handle(array $driveFileIds, string $targetFolderUuid): void
     {
         // validate there is no file with same name (already done by form request but redo it here)
         // move file in storage
         // get new path
         // update file path in database
         // update folder id of file
+        $targetFolder = Folder::query()->where('uuid', $targetFolderUuid)->firstOrFail();
+        $driveFiles = DriveFile::query()->with('versions')->whereIn('uuid', $driveFileIds)->get();
+
+        abort_unless(boolean: $driveFiles->count() === count($driveFileIds), code: Response::HTTP_UNPROCESSABLE_ENTITY, message: 'File(s) not found.');
 
         $this->ensureFilesNotExistsInTargetFolder($driveFiles, $targetFolder);
 
@@ -32,7 +38,6 @@ class MoveDriveFilesToFolder
 
         DB::transaction(function () use ($driveFiles, $newFileFolderPath, $targetFolder) {
             collect($driveFiles)->each(function (DriveFile $driveFile) use ($newFileFolderPath, $targetFolder) {
-
                 collect($driveFile->versions)->each(function (DriveFileVersion $version) use ($newFileFolderPath) {
                     $newVersionPath = sprintf('%s/%s', $newFileFolderPath, $version->uuid);
 
@@ -55,28 +60,33 @@ class MoveDriveFilesToFolder
     }
 
     /**
-     * @param DriveFile[] $driveFiles
+     * @param Collection<int,DriveFile> $driveFiles
      *
      * @throws FileAlreadyExistInTargetFolderException
      */
-    private function ensureFilesNotExistsInTargetFolder(array $driveFiles, Folder $targetFolder): void
+    private function ensureFilesNotExistsInTargetFolder(Collection $driveFiles, Folder $targetFolder): void
     {
+        /** @var Collection<int,DriveFile> $driveFileNames */
+        $driveFileNames = DriveFile::query()
+            ->with('currentVersion')
+            ->whereIn('id', collect($driveFiles)->pluck('id')->toArray())
+            ->select('original_name', 'id')
+            ->get();
+
         $existingInFolder = Folder::query()
             ->with('files', 'files.currentVersion')
             ->where('id', $targetFolder->id)
-            ->whereHas('files', function ($query) use ($driveFiles) {
-                // $query->whereIn('id', collect($driveFiles)->pluck('id')->toArray());
-                $query->whereHas('currentVersion', function ($query) use ($driveFile) {
-                    $query->where('original_namsqe', $driveFile->original_name);
+            ->whereHas('files', function ($query) use ($driveFileNames) {
+                $query->whereHas('currentVersion', function ($query) use ($driveFileNames) {
+                    $query->whereIn('original_name', $driveFileNames->pluck('original_name')->toArray());
                 });
-            })->get();
+            });
 
-        if ($existingInFolder->isEmpty()) {
-            return;
-        }
+        $isExistingInFolder = $existingInFolder->exists();
 
-        $diff = collect($driveFiles)->diff($existingInFolder);
+        /** @var Collection<int,DriveFile> $diff */
+        $diff = $driveFileNames->diff($existingInFolder->get()->pluck('original_name'));
 
-        throw_if($diff->isNotEmpty(), FileAlreadyExistInTargetFolderException::class, $diff->implode('original_name', ', '));
+        throw_if($isExistingInFolder, FileAlreadyExistInTargetFolderException::class, implode(', ', $diff->pluck('original_name')->toArray()));
     }
 }
