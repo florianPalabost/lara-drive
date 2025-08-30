@@ -76,9 +76,10 @@ export function createDataTableComponent<TData, TValue>() {
       },
       enableRowSelection: true
     });
+    const selectedRows = table.getSelectedRowModel().rows;
 
     return (
-      <DataTableContext.Provider value={{ table, actions, selectedRows: table.getSelectedRowModel().rows }}>
+      <DataTableContext.Provider value={{ table, actions, selectedRows }}>
         {children}
       </DataTableContext.Provider>
     );
@@ -153,14 +154,14 @@ export function createDataTableComponent<TData, TValue>() {
 
   // Pagination (outside table but inside provider)
   function Pagination() {
-    const { table } = useDataTableContext();
+    const { table, selectedRows } = useDataTableContext();
     return (
     <div className="flex items-center justify-between border-t border-gray-200 bg-white py-3">
       <div className="flex items-center justify-end space-x-2 p-2">
         {
-            table.getPreSelectedRowModel().rows.length > 0 && (
+            selectedRows.length > 0 && (
                 <div className="text-sm">
-                   {table.getSelectedRowModel().rows.length} / {table.getPreSelectedRowModel().rows.length} row(s) selected
+                   {selectedRows.length} / {selectedRows.length} row(s) selected
                 </div>
             )
         }
@@ -191,7 +192,7 @@ export function createDataTableComponent<TData, TValue>() {
 
   // Toolbar slot
   function Toolbar({ children }: { children: React.ReactNode }) {
-    return <div className="p-2">{children}</div>;
+    return <div className="">{children}</div>;
   }
 
   return Object.assign(Root, {
