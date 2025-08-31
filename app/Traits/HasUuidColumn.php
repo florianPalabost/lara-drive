@@ -7,8 +7,6 @@ namespace App\Traits;
 use Illuminate\Support\Str;
 
 /**
- * Trait HasUuidColumn
- *
  * Automatically generates a UUID for the `uuid` column when a model is created.
  *
  * @mixin \Illuminate\Database\Eloquent\Model
