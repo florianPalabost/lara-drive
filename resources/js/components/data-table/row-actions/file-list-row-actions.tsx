@@ -1,4 +1,4 @@
-import { LucideDownload, LucideEye, LucideHistory, LucideShare2, LucideTrash, MoreHorizontal } from 'lucide-react';
+import { LucideDownload, LucideEye, LucideHistory, LucideShare2, LucideTrash, MoreHorizontal, MoreVertical } from 'lucide-react';
 import { DriveFile, DriveFileVersion } from '@/types/folder';
 import { Button } from '../../ui/button';
 import { DataTableActions } from '../../ui/data-table/data-table';
@@ -28,7 +28,7 @@ export function FileListRowActions({ fileVersion }: FileListRowActionsProps) {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0 cursor-pointer">
-                    <MoreHorizontal className="h-4 w-4" />
+                    <MoreVertical className="h-4 w-4" />
                     <span className="sr-only">Open menu</span>
                 </Button>
             </DropdownMenuTrigger>
