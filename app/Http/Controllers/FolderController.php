@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreFolderRequest;
 use App\Http\Requests\UpdateFolderRequest;
 use App\Models\Folder;
+use App\Services\BreadcrumbService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -23,14 +24,24 @@ class FolderController extends Controller
      */
     public function index(Request $request): Response
     {
+        $selectedFolder = $request->has('folder')
+        ? Folder::query()->with('children', 'files', 'files.currentVersion', 'files.currentVersion.file', 'parent', 'children.files', 'children.files.currentVersion')
+            ->where('uuid', $request->get('folder'))
+            ->firstOrFail()
+        : null;
+
         $folders = Folder::query()->whereNull('parent_id')
             ->with('children', 'files', 'files.currentVersion')
             ->where('user_id', auth()->user()->id)
             ->orderBy('name')
             ->get();
 
+        $breadcrumbs = $selectedFolder ? BreadcrumbService::buildBreadcrumbFromFolder($selectedFolder) : BreadcrumbService::getHomeFoldersBreadcrumbs();
+
         return inertia('folders/index', [
-            'folders' => $folders,
+            'folders'        => $folders,
+            'selectedFolder' => $selectedFolder,
+            'breadcrumbs'    => $breadcrumbs,
         ]);
     }
 
@@ -94,7 +105,8 @@ class FolderController extends Controller
         $folder->load(['children', 'files', 'files.currentVersion', 'files.currentVersion.file', 'parent', 'children.files', 'children.files.currentVersion']);
 
         return response()->json([
-            'folder' => $folder,
+            'folder'      => $folder,
+            'breadcrumbs' => BreadcrumbService::buildBreadcrumbFromFolder($folder),
         ]);
     }
 
