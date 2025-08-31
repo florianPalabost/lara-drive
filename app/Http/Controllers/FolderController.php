@@ -7,12 +7,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreFolderRequest;
 use App\Http\Requests\UpdateFolderRequest;
 use App\Models\Folder;
+use App\Services\BreadcrumbService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Response;
 
 class FolderController extends Controller
@@ -22,14 +24,24 @@ class FolderController extends Controller
      */
     public function index(Request $request): Response
     {
+        $selectedFolder = $request->has('folder')
+        ? Folder::query()->with('children', 'files', 'files.currentVersion', 'files.currentVersion.file', 'parent', 'children.files', 'children.files.currentVersion')
+            ->where('uuid', $request->get('folder'))
+            ->firstOrFail()
+        : null;
+
         $folders = Folder::query()->whereNull('parent_id')
             ->with('children', 'files', 'files.currentVersion')
             ->where('user_id', auth()->user()->id)
             ->orderBy('name')
             ->get();
 
+        $breadcrumbs = $selectedFolder ? BreadcrumbService::buildBreadcrumbFromFolder($selectedFolder) : BreadcrumbService::getHomeFoldersBreadcrumbs();
+
         return inertia('folders/index', [
-            'folders' => $folders,
+            'folders'        => $folders,
+            'selectedFolder' => $selectedFolder,
+            'breadcrumbs'    => $breadcrumbs,
         ]);
     }
 
@@ -66,17 +78,19 @@ class FolderController extends Controller
                 ->firstOrFail();
         }
 
-        $folderPath = match (true) {
-            $parentFolder && $parentFolder->parent_id => $parentFolder->path . '/' . $parentFolder->uuid,
-            $parentFolder                             => '/' . $parentFolder->uuid,
-            default                                   => '/',
-        };
+        $parentFolderPath = $parentFolder ? $parentFolder->path : '';
+
+        $folderUuid = Str::uuid7()->toString();
+
+        $folderPath = $parentFolderPath . '/' . $folderUuid;
+        $folderPath = str_replace('//', '/', $folderPath);
 
         $folder = Folder::create([
             ...$input,
             'parent_id' => $parentFolder->id ?? null,
             'path'      => $folderPath,
             'user_id'   => auth()->user()->id,
+            'uuid'      => $folderUuid,
         ]);
 
         return to_route('folders.index', ['folder' => $folder]);
@@ -91,7 +105,8 @@ class FolderController extends Controller
         $folder->load(['children', 'files', 'files.currentVersion', 'files.currentVersion.file', 'parent', 'children.files', 'children.files.currentVersion']);
 
         return response()->json([
-            'folder' => $folder,
+            'folder'      => $folder,
+            'breadcrumbs' => BreadcrumbService::buildBreadcrumbFromFolder($folder),
         ]);
     }
 

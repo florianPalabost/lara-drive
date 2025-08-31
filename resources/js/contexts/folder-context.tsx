@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { useBreadcrumbs } from '@/hooks/use-breadcrumbs';
 import { Folder } from '@/types/folder';
 
 interface FolderContextProps {
@@ -31,6 +32,7 @@ interface FolderProviderProps {
 export function FolderProvider({ children, initialFolders, initialSelected = null }: FolderProviderProps) {
     const [folders, setFolders] = useState<Folder[]>(initialFolders);
     const [selectedFolder, setSelectedFolder] = useState<Folder | null>(initialSelected);
+    const { setBreadcrumbs } = useBreadcrumbs();
 
     const updateFolderChildren = (updated: Folder) => {
         setFolders((prev) => updateFolderInTree(prev, updated));
@@ -38,13 +40,15 @@ export function FolderProvider({ children, initialFolders, initialSelected = nul
 
     const loadFolder = async (uuid: string) => {
         const res = await fetch(route('folders.load', uuid));
-        const { folder } = await res.json();
+        const { folder, breadcrumbs } = await res.json();
         setSelectedFolder(folder);
+        // TODO: only uodate if "naviagte from tree sidebar"
+        setBreadcrumbs(breadcrumbs);
         updateFolderChildren(folder);
     };
 
     useEffect(() => {
-        setFolders(initialFolders); // ← update when prop changes
+        setFolders(initialFolders); //  update when prop changes
     }, [initialFolders]);
 
     return (
