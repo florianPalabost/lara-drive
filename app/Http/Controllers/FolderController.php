@@ -13,6 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Response;
 
 class FolderController extends Controller
@@ -66,17 +67,19 @@ class FolderController extends Controller
                 ->firstOrFail();
         }
 
-        $folderPath = match (true) {
-            $parentFolder && $parentFolder->parent_id => $parentFolder->path . '/' . $parentFolder->uuid,
-            $parentFolder                             => '/' . $parentFolder->uuid,
-            default                                   => '/',
-        };
+        $parentFolderPath = $parentFolder ? $parentFolder->path : '';
+
+        $folderUuid = Str::uuid7()->toString();
+
+        $folderPath = $parentFolderPath . '/' . $folderUuid;
+        $folderPath = str_replace('//', '/', $folderPath);
 
         $folder = Folder::create([
             ...$input,
             'parent_id' => $parentFolder->id ?? null,
             'path'      => $folderPath,
             'user_id'   => auth()->user()->id,
+            'uuid'      => $folderUuid,
         ]);
 
         return to_route('folders.index', ['folder' => $folder]);
