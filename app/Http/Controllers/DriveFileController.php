@@ -9,6 +9,7 @@ use App\Http\Requests\StoreDriveFileRequest;
 use App\Http\Requests\UpdateDriveFileRequest;
 use App\Models\DriveFile;
 use App\Models\Folder;
+use App\Services\BreadcrumbService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
@@ -86,8 +87,17 @@ class DriveFileController extends Controller
             ->take(10)
             ->get();
 
+        $breadcrumbs = [
+            BreadcrumbService::getHomeBreadcrumb(),
+            [
+                'title' => 'Recent Files',
+                'href'  => route('files.recent'),
+            ],
+        ];
+
         return inertia('files/recent', [
             'recentFiles' => $recentFiles,
+            'breadcrumbs' => $breadcrumbs,
         ]);
     }
 }
