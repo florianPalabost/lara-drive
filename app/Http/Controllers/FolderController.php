@@ -8,7 +8,7 @@ use App\Actions\CreateNewFolder;
 use App\Http\Requests\StoreFolderRequest;
 use App\Http\Requests\UpdateFolderRequest;
 use App\Models\Folder;
-use App\Services\BreadcrumbService;
+use App\Services\BreadCrumb\Extends\FolderBreadcrumbService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -36,7 +36,7 @@ class FolderController extends Controller
             ->orderBy('name')
             ->get();
 
-        $breadcrumbs = $selectedFolder ? BreadcrumbService::buildBreadcrumbFromFolder($selectedFolder) : BreadcrumbService::getHomeFoldersBreadcrumbs();
+        $breadcrumbs = $selectedFolder ? FolderBreadcrumbService::build($selectedFolder) : FolderBreadcrumbService::getHomeFoldersBreadcrumbs();
 
         return inertia('folders/index', [
             'folders'        => $folders,
@@ -90,7 +90,7 @@ class FolderController extends Controller
 
         return response()->json([
             'folder'      => $folder,
-            'breadcrumbs' => BreadcrumbService::buildBreadcrumbFromFolder($folder),
+            'breadcrumbs' => FolderBreadcrumbService::build($folder),
         ]);
     }
 

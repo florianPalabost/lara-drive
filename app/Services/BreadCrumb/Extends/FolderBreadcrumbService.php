@@ -2,18 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Services;
+namespace App\Services\BreadCrumb\Extends;
 
 use App\Models\Folder;
+use App\Services\BreadcrumbService;
+use Illuminate\Database\Eloquent\Model;
 
-class BreadcrumbService
+class FolderBreadcrumbService extends BreadcrumbService
 {
     /**
-     * @return array<array{title: string, href: string}>
+     * @param Folder $folder
+     * @return Breadcrumb[]
      */
-    public static function buildBreadcrumbFromFolder(Folder $folder): array
+    public static function folderIndexPage(Model $folder): array
     {
-        $breadcrumbs = self::getHomeFoldersBreadcrumbs();
+        $breadcrumbs = static::getHomeFoldersBreadcrumbs();
 
         self::digFolderBreadcrumb($folder, $breadcrumbs);
 
@@ -21,7 +24,7 @@ class BreadcrumbService
     }
 
     /**
-     * @return array<array{title: string, href: string}>
+     * @return Breadcrumb[]
      */
     public static function getHomeFoldersBreadcrumbs(): array
     {
@@ -35,18 +38,7 @@ class BreadcrumbService
     }
 
     /**
-     * @return array{title: string, href: string}
-     */
-    public static function getHomeBreadcrumb(): array
-    {
-        return [
-            'title' => 'Home',
-            'href'  => '/',
-        ];
-    }
-
-    /**
-     * @param array<array{title: string, href: string}> $breadcrumbs
+     * @param Breadcrumb[] $breadcrumbs
      */
     private static function digFolderBreadcrumb(Folder $folder, array &$breadcrumbs): void
     {

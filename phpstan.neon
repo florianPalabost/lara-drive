@@ -22,3 +22,5 @@ parameters:
 
     typeAliases:
         ValidationRules: 'array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>'
+        Breadcrumb: 'array{title: string, href: string}'
+
