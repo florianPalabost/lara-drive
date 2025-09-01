@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\CreateNewFolder;
 use App\Http\Requests\StoreFolderRequest;
 use App\Http\Requests\UpdateFolderRequest;
 use App\Models\Folder;
@@ -14,7 +15,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Inertia\Response;
 
 class FolderController extends Controller
@@ -67,30 +67,14 @@ class FolderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFolderRequest $request): RedirectResponse
+    public function store(StoreFolderRequest $request, CreateNewFolder $createNewFolderAction): RedirectResponse
     {
+        /** @var array{name: string, parent_id: ?string} $input */
         $input = $request->validated();
-        $parentFolder = null;
 
-        if (Arr::has($input, 'parent_id') && $input['parent_id']) {
-            $parentFolder = Folder::query()
-                ->where('uuid', $input['parent_id'])
-                ->firstOrFail();
-        }
-
-        $parentFolderPath = $parentFolder ? $parentFolder->path : '';
-
-        $folderUuid = Str::uuid7()->toString();
-
-        $folderPath = $parentFolderPath . '/' . $folderUuid;
-        $folderPath = str_replace('//', '/', $folderPath);
-
-        $folder = Folder::create([
-            ...$input,
-            'parent_id' => $parentFolder->id ?? null,
-            'path'      => $folderPath,
-            'user_id'   => auth()->user()->id,
-            'uuid'      => $folderUuid,
+        $folder = $createNewFolderAction->handle([
+            'name'      => Arr::get($input, 'name'),
+            'parent_id' => Arr::get($input, 'parent_id'),
         ]);
 
         return to_route('folders.index', ['folder' => $folder]);
