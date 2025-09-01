@@ -1,4 +1,4 @@
-import { LucideDownload, LucideEye, LucideHistory, LucideShare2, LucideTrash, MoreHorizontal, MoreVertical } from 'lucide-react';
+import { LucideDownload, LucideEye, LucideHistory, LucideShare2, LucideTrash, MoreVertical } from 'lucide-react';
 import { DriveFile, DriveFileVersion } from '@/types/folder';
 import { Button } from '../../ui/button';
 import { DataTableActions } from '../../ui/data-table/data-table';
