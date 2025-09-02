@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { useFolderContext } from '@/contexts/folder-context';
 import { Folder } from '@/types/folder';
 import { FileList } from './drive-file/file-list';
-import FileUpload from './drive-file/file-upload';
+import { FileUpload } from './drive-file/file-upload';
 import { Button } from './ui/button';
 
 export function FolderContent() {

@@ -26,7 +26,8 @@ class StoreDriveFileRequest extends FormRequest
     {
         return [
             'folder_id' => ['required', Rule::exists('folders', 'uuid')],
-            'file'      => ['required', 'file', 'max:102400'], // 100 mb => 102400 kb
+            'files'     => ['required', 'array', 'min:1'],
+            'files.*'   => ['file', 'max:102400'], // 100 mb => 102400 kb
         ];
     }
 }
