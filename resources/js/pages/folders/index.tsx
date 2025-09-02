@@ -9,22 +9,17 @@ import { Folder } from '@/types/folder';
 
 interface FolderIndexProps {
     folders: Array<Folder>;
+    selectedFolder: Folder | null;
 }
 
-export default function FolderIndex({ folders }: FolderIndexProps) {
-    console.debug('folders', folders);
-    const breadcrumbs: BreadcrumbItem[] = [
-        {
-            title: 'Folders',
-            href: '/folders',
-        },
-    ];
+export default function FolderIndex({ folders, selectedFolder }: FolderIndexProps) {
+    console.debug('page folders', folders);
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AppLayout>
             <Head title="Folders" />
             <div className="mb-4 flex h-full gap-4">
-                <FolderProvider initialFolders={folders}>
+                <FolderProvider initialFolders={folders} initialSelected={selectedFolder}>
                     <FolderTree />
                     <ErrorBoundary fallback={<p>There was an issue displaying folder content.</p>}>
                         <FolderContent />

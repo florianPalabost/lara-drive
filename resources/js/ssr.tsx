@@ -14,7 +14,7 @@ createServer((page) =>
         resolve: (name) => resolvePageComponent(`./pages/${name}.tsx`, import.meta.glob('./pages/**/*.tsx')),
         setup: ({ App, props }) => {
             /* eslint-disable */
-            global.route = (name: RouteName, params?: Record<string, string>, absolute?: boolean) =>
+            global.route = (name: RouteName, params?: any, absolute?: boolean) =>
                 route(name, params as Record<string, string>, absolute, {
                     // @ts-expect-error
                     ...page.props.ziggy,

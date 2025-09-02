@@ -9,6 +9,7 @@ use App\Http\Requests\StoreDriveFileRequest;
 use App\Http\Requests\UpdateDriveFileRequest;
 use App\Models\DriveFile;
 use App\Models\Folder;
+use App\Services\BreadCrumb\Extends\DashboardBreadcrumbService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
@@ -78,7 +79,7 @@ class DriveFileController extends Controller
         return to_route('folders.index');
     }
 
-    public function recent(): Response
+    public function recent(DashboardBreadcrumbService $dashboardBreadcrumbService): Response
     {
         $recentFiles = auth()->user()
             ->files()
@@ -88,6 +89,7 @@ class DriveFileController extends Controller
 
         return inertia('files/recent', [
             'recentFiles' => $recentFiles,
+            'breadcrumbs' => $dashboardBreadcrumbService->dashboardPage(),
         ]);
     }
 }

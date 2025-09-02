@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\Folder;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -24,6 +25,7 @@ class DriveFileFactory extends Factory
             'uuid'          => Str::uuid7()->toString(),
             'folder_id'     => Folder::factory(),
             'original_name' => fake()->name(),
+            'user_id'       => User::factory(),
         ];
     }
 }

@@ -25,7 +25,7 @@ export function FolderTree() {
         // Do nothing more if the folder is already loaded
         if (folderUuid === selectedFolder?.uuid) return;
 
-        loadFolder(folderUuid);
+        await loadFolder(folderUuid);
     };
 
     const handleImportFolder = () => {
@@ -52,7 +52,12 @@ export function FolderTree() {
         <div className="border rounded-lg bg-white shadow-sm p-4 max-h-screen overflow-auto">
             <div className="border rounded-md bg-white shadow-sm p-2 h-full flex flex-col">
                 <Button className="text-sm mb-4 px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-center">
-                    <a href={route('folders.create', { folder: selectedFolder?.uuid })} className="flex items-center">
+                    <a
+                        href={route('folders.create', {
+                            folder: selectedFolder?.uuid,
+                        })}
+                        className="flex items-center"
+                    >
                         <LucidePlus className="mr-2" /> Add folder
                     </a>
                 </Button>

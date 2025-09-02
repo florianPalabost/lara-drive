@@ -1,9 +1,12 @@
 import { Link } from '@inertiajs/react';
 import { Fragment } from 'react';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
+import { useBreadcrumbs } from '@/hooks/use-breadcrumbs';
 import { type BreadcrumbItem as BreadcrumbItemType } from '@/types';
 
-export function Breadcrumbs({ breadcrumbs }: { breadcrumbs: BreadcrumbItemType[] }) {
+export function Breadcrumbs() {
+    const { breadcrumbs } = useBreadcrumbs();
+
     return (
         <>
             {breadcrumbs.length > 0 && (
