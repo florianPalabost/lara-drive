@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services\BreadCrumb\Extends;
 
 use App\Models\Folder;
-use App\Services\BreadcrumbService;
+use App\Services\BreadCrumb\BreadcrumbService;
 use Illuminate\Database\Eloquent\Model;
 
 class FolderBreadcrumbService extends BreadcrumbService

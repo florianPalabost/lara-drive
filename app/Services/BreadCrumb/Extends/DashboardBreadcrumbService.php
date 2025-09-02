@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\BreadCrumb\Extends;
 
-use App\Services\BreadcrumbService;
+use App\Services\BreadCrumb\BreadcrumbService;
 
 class DashboardBreadcrumbService extends BreadcrumbService
 {
@@ -17,7 +17,7 @@ class DashboardBreadcrumbService extends BreadcrumbService
             self::getHomeBreadcrumb(),
             [
                 'title' => 'Dashboard',
-                'href'  => route('dashboard.index'),
+                'href'  => route('dashboard'),
             ],
         ];
     }

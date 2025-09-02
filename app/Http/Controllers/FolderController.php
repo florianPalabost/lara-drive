@@ -36,7 +36,7 @@ class FolderController extends Controller
             ->orderBy('name')
             ->get();
 
-        $breadcrumbs = $selectedFolder ? FolderBreadcrumbService::build($selectedFolder) : FolderBreadcrumbService::getHomeFoldersBreadcrumbs();
+        $breadcrumbs = $selectedFolder ? FolderBreadcrumbService::folderIndexPage($selectedFolder) : FolderBreadcrumbService::getHomeFoldersBreadcrumbs();
 
         return inertia('folders/index', [
             'folders'        => $folders,
@@ -90,7 +90,7 @@ class FolderController extends Controller
 
         return response()->json([
             'folder'      => $folder,
-            'breadcrumbs' => FolderBreadcrumbService::build($folder),
+            'breadcrumbs' => FolderBreadcrumbService::folderIndexPage($folder),
         ]);
     }
 
