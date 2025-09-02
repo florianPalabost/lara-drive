@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\CreateNewDriveFile;
+use App\Actions\BulkCreateNewDriveFiles;
 use App\Http\Requests\StoreDriveFileRequest;
 use App\Http\Requests\UpdateDriveFileRequest;
 use App\Models\DriveFile;
@@ -31,18 +31,13 @@ class DriveFileController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreDriveFileRequest $request, CreateNewDriveFile $createNewDriveFileAction): RedirectResponse
+    public function store(StoreDriveFileRequest $request, BulkCreateNewDriveFiles $bulkCreateNewDriveFilesAction): RedirectResponse
     {
-        /** @var array{folder_id: string, file: UploadedFile} $input */
+        /** @var array{folder_id: string, files: UploadedFile[]} $input */
         $input = $request->validated();
-        $uploadedFile = request()->file('file');
 
-        $createNewDriveFileAction->handle([
-            'folder_id' => $input['folder_id'],
-            'file'      => $uploadedFile,
-        ]);
+        $bulkCreateNewDriveFilesAction->handle($input);
 
-        // TODO: if folder.show implemented return to show
         return to_route('folders.index');
     }
 
