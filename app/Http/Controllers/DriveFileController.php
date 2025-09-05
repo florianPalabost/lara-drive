@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateDriveFileRequest;
 use App\Models\DriveFile;
 use App\Models\Folder;
 use App\Services\BreadCrumb\Extends\DashboardBreadcrumbService;
+use App\Services\BreadCrumb\Extends\TrashedFileBreadcrumbService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
@@ -85,6 +86,19 @@ class DriveFileController extends Controller
         return inertia('files/recent', [
             'recentFiles' => $recentFiles,
             'breadcrumbs' => $dashboardBreadcrumbService->dashboardPage(),
+        ]);
+    }
+
+    public function trashed(TrashedFileBreadcrumbService $trashedFileBreadcrumbService): Response
+    {
+        $trashedFiles = auth()->user()
+            ->files()
+            ->onlyTrashed()
+            ->get();
+
+        return inertia('files/trashed', [
+            'trashedFiles' => $trashedFiles,
+            'breadcrumbs'  => $trashedFileBreadcrumbService->trashedPage(),
         ]);
     }
 }
