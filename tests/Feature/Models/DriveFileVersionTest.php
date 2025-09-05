@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-test('example', function () {
-    $response = $this->get('/');
+describe('Models > DriveFileVersion', function () {
+    describe('Relations', function () {
+        it('should belongs to a drive file', function () {})->todo();
 
-    $response->assertStatus(200);
+        it('should have only one active version per drive file', function () {})->todo();
+    })->group('relations');
 });

@@ -61,7 +61,7 @@ describe('Controllers > MoveDriveFileController', function () {
             Storage::assertExists("users/{$user->uuid}/folders/{$destinationFolder->path}/{$destinationFolder->uuid}/{$file->uuid}/{$version->uuid}");
             Storage::assertMissing("users/{$user->uuid}/folders/{$sourceFolder->path}/{$sourceFolder->uuid}/{$file->uuid}/{$version->uuid}");
         }
-    })->only();
+    });
 
     it('should move multiple files to another folder', function () {})->todo();
 
