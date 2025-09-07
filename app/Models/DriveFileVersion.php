@@ -25,6 +25,13 @@ class DriveFileVersion extends Model
         'mime_type',
     ];
 
+    // @tips: set default values with eloquent instead of with migrations
+    /** @var array<string, mixed> */
+    protected $attributes = [
+        'version'    => 1,
+        'is_current' => true,
+    ];
+
     /**
      * @return BelongsTo<DriveFile,$this>
      */
