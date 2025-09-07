@@ -16,7 +16,8 @@ class ArrayExistModelIds implements ValidationRule, ValidatorAwareRule
     protected Validator $validator;
 
     public function __construct(
-        protected string $modelClass
+        protected string $modelClass,
+        protected bool $withTrashed = false
     ) {}
 
     public function setValidator(Validator $validator): static
@@ -42,8 +43,14 @@ class ArrayExistModelIds implements ValidationRule, ValidatorAwareRule
             return;
         }
 
+        $query = $this->modelClass::query();
+
+        if ($this->withTrashed) {
+            $query->withTrashed();
+        }
+
         // fetch existing attribute ids with one sql request(in(...)) instead of making one per id
-        $existingModelIds = $this->modelClass::whereIn(column: 'uuid', values: $value)->pluck('uuid')->flip()->toArray();
+        $existingModelIds = $query->whereIn(column: 'uuid', values: $value)->pluck('uuid')->flip()->toArray();
 
         // if no ids exist then we can fail immediately since no model seems to exist
         if ($existingModelIds === []) {
