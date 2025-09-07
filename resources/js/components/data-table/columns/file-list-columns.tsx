@@ -13,16 +13,20 @@ export function fileListColumns(): ColumnDef<DriveFileVersion>[] {
         //     header: "Icon",
         //     cell: ({ getValue }) => getFileIcon(getValue<string>()),
         // },
-        {
-            accessorKey: 'uuid',
-            header: ({ column }) => <SortableHeader column={column} title="ID" />,
-            cell: ({ getValue }) => getValue(),
-        },
+
         {
             accessorKey: 'file.original_name',
             header: ({ column }) => <SortableHeader column={column} title="Name" />,
             cell: ({ getValue }) => getValue(),
         },
+        {
+            id: 'actions',
+            header: 'Actions',
+            enableSorting: false,
+            enableHiding: false,
+            cell: ({ row }) => <FileListRowActions fileVersion={row.original} />,
+        },
+
         {
             accessorKey: 'version',
             header: ({ column }) => <SortableHeader column={column} title="Version" />,
@@ -44,11 +48,9 @@ export function fileListColumns(): ColumnDef<DriveFileVersion>[] {
             cell: ({ getValue }) => new Date(getValue<string>()).toLocaleString(),
         },
         {
-            id: 'actions',
-            header: 'Actions',
-            enableSorting: false,
-            enableHiding: false,
-            cell: ({ row }) => <FileListRowActions fileVersion={row.original} />,
+            accessorKey: 'uuid',
+            header: ({ column }) => <SortableHeader column={column} title="ID" />,
+            cell: ({ getValue }) => getValue(),
         },
     ];
 }
