@@ -28,7 +28,7 @@ export function FileList({ files }: FileListProps) {
         setPreviewFile(file);
     };
 
-    const handleDeleteFile = (file: DriveFile) => () => {
+    const handleDeleteFile = (file: DriveFile) => {
         if (confirm('Are you sure you want to delete this file?')) {
             router.delete(route('files.destroy', file.uuid), {
                 onSuccess: () => {
