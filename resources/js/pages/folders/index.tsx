@@ -18,12 +18,19 @@ export default function FolderIndex({ folders, selectedFolder }: FolderIndexProp
     return (
         <AppLayout>
             <Head title="Folders" />
-            <div className="mb-4 flex h-full gap-4">
+            <div className="mb-4 flex flex-col md:flex-row h-full gap-4">
                 <FolderProvider initialFolders={folders} initialSelected={selectedFolder}>
-                    <FolderTree />
-                    <ErrorBoundary fallback={<p>There was an issue displaying folder content.</p>}>
-                        <FolderContent />
-                    </ErrorBoundary>
+                    {/* Sidebar */}
+                    <div className="md:w-1/3 lg:w-1/4">
+                        <FolderTree />
+                    </div>
+
+                    {/* Main Content */}
+                    <div className="md:w-2/3 lg:w-3/4">
+                        <ErrorBoundary fallback={<p>There was an issue displaying folder content.</p>}>
+                            <FolderContent />
+                        </ErrorBoundary>
+                    </div>
                 </FolderProvider>
             </div>
         </AppLayout>
