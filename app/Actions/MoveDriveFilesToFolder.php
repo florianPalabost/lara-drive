@@ -27,6 +27,7 @@ class MoveDriveFilesToFolder
         // get new path
         // update file path in database
         // update folder id of file
+
         $targetFolder = Folder::query()->where('uuid', $targetFolderUuid)->firstOrFail();
         $driveFiles = DriveFile::query()->with('versions')->whereIn('uuid', $driveFileIds)->get();
 
