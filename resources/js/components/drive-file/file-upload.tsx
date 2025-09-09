@@ -20,7 +20,6 @@ export function FileUpload() {
 
         if (!newFiles.length) return;
 
-        // validate
         const validFiles: File[] = [];
 
         newFiles.forEach((file) => {

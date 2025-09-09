@@ -21,7 +21,7 @@ export function useBreadcrumbs() {
 
     // /!\ TODO: Change usestate hook in useEffect
     useEffect(() => {
-        if (page.props.breadcrumbs) {
+        if (page.props.breadcrumbs && page.props.breadcrumbs.length > 0) {
             console.debug('breadcrumbs', page.props.breadcrumbs);
             setBreadcrumbs(page.props.breadcrumbs);
         }
@@ -32,9 +32,7 @@ export function useBreadcrumbs() {
             clearBreadcrumbs();
         });
 
-        return () => {
-            unListen();
-        };
+        return () => unListen();
     }, [clearBreadcrumbs]);
 
     return {

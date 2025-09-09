@@ -36,5 +36,10 @@ describe('Models > DriveFile', function () {
             // Assert
             expect($file->user->id)->toBe($user->id);
         });
+
+        it('should has many drive file shares ???', function () {})->todo();
+        it('should has many drive file versions', function () {})->todo();
     })->group('relations');
+
+    it('should have only one active version per drive file', function () {})->todo();
 });
