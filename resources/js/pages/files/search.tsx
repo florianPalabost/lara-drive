@@ -4,7 +4,7 @@ import AppLayout from '@/layouts/app-layout';
 import { DriveFile } from '@/types/folder';
 
 interface FilesSearchProps {
-    files: Array<DriveFile>;
+    files: DriveFile[];
     query: string;
 }
 
