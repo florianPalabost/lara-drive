@@ -33,4 +33,5 @@ export interface DriveFile {
     current_version: DriveFileVersion;
     created_at: string;
     updated_at: string;
+    folder?: Folder;
 }

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->unique(['folder_id', 'original_name']);
 
             $table->timestampsTz();
+            $table->softDeletesTz();
         });
     }
 

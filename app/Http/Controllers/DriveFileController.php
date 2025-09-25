@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Actions\BulkCreateNewDriveFiles;
+use App\Actions\DeleteDriveFile;
 use App\Http\Requests\StoreDriveFileRequest;
 use App\Http\Requests\UpdateDriveFileRequest;
 use App\Models\DriveFile;
-use App\Models\Folder;
 use App\Services\BreadCrumb\Extends\DashboardBreadcrumbService;
-use Exception;
+use App\Services\BreadCrumb\Extends\TrashedFileBreadcrumbService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -59,19 +59,11 @@ class DriveFileController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DriveFile $file): RedirectResponse
+    public function destroy(DriveFile $file, DeleteDriveFile $deleteDriveFileAction): RedirectResponse
     {
-        // TODO: delete file from storage
-        try {
-            // Storage::disk('minio')->delete($file->path);
-            $file->versions()->delete();
-            $file->delete();
-        }
-        catch (Exception $exception) {
-            report($exception);
-        }
+        $deleteDriveFileAction->handle($file);
 
-        return to_route('folders.index');
+        return to_route('folders.index', ['folder' => $file->folder->uuid]);
     }
 
     public function recent(DashboardBreadcrumbService $dashboardBreadcrumbService): Response
@@ -85,6 +77,20 @@ class DriveFileController extends Controller
         return inertia('files/recent', [
             'recentFiles' => $recentFiles,
             'breadcrumbs' => $dashboardBreadcrumbService->dashboardPage(),
+        ]);
+    }
+
+    public function trashed(TrashedFileBreadcrumbService $trashedFileBreadcrumbService): Response
+    {
+        $trashedFiles = auth()->user()
+            ->files()
+            ->with('folder')
+            ->onlyTrashed()
+            ->get();
+
+        return inertia('files/trashed', [
+            'trashedFiles' => $trashedFiles,
+            'breadcrumbs'  => $trashedFileBreadcrumbService->trashedPage(),
         ]);
     }
 }

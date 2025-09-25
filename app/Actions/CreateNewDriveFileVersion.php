@@ -7,6 +7,7 @@ namespace App\Actions;
 use App\Models\DriveFile;
 use App\Models\DriveFileVersion;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class CreateNewDriveFileVersion
@@ -19,29 +20,29 @@ class CreateNewDriveFileVersion
         $uploadedFile = $data['file'];
         $user = auth()->user();
         $folder = $driveFile->folder;
-
         $newVersionUuid = Str::uuid7()->toString();
+
         // create file path folder
         $path = sprintf('users/%s/folders/%s%s', $user->uuid, $folder->parent ? $folder->path . '/' . $folder->uuid : '', $folder->uuid);
-
-        // store file in storage
         $storedPath = $uploadedFile->storeAs($path, $newVersionUuid, ['disk' => 'minio']);
 
         $maxVersion = $driveFile->versions()->max('version');
 
-        if ($maxVersion) {
-            $driveFile->versions()->where('version', $maxVersion)->update(['is_current' => false]);
-        }
+        return DB::transaction(function () use ($driveFile, $newVersionUuid, $storedPath, $maxVersion, $uploadedFile) {
+            if ($maxVersion) {
+                $driveFile->versions()->where('version', $maxVersion)->update(['is_current' => false, 'deleted_at' => now()]);
+            }
 
-        $payload = [
-            'uuid'       => $newVersionUuid,
-            'is_current' => true,
-            'mime_type'  => $uploadedFile->getClientMimeType(),
-            'path'       => $storedPath,
-            'size'       => $uploadedFile->getSize(),
-            'version'    => $maxVersion + 1,
-        ];
+            $payload = [
+                'uuid'       => $newVersionUuid,
+                'is_current' => true,
+                'mime_type'  => $uploadedFile->getClientMimeType(),
+                'path'       => $storedPath,
+                'size'       => $uploadedFile->getSize(),
+                'version'    => $maxVersion + 1,
+            ];
 
-        return $driveFile->versions()->create($payload);
+            return $driveFile->versions()->create($payload);
+        });
     }
 }

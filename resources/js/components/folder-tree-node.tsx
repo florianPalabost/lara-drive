@@ -3,7 +3,6 @@ import { TreeNodeProps } from 'react-arborist';
 import { Folder } from '@/types/folder';
 
 export function FolderTreeNode({ node, style, dragHandle }: TreeNodeProps<Folder>) {
-    // console.debug('rendering FolderTreeNode');
     return (
         <div
             style={{

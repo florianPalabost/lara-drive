@@ -10,11 +10,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DriveFile extends Model
 {
     /** @use HasFactory<\Database\Factories\DriveFileFactory> */
-    use HasFactory, HasUuidColumn;
+    use HasFactory, HasUuidColumn, SoftDeletes;
 
     protected $fillable = [
         'uuid',
@@ -52,7 +53,7 @@ class DriveFile extends Model
      */
     public function versions(): HasMany
     {
-        return $this->hasMany(DriveFileVersion::class)->orderBy('version', 'desc');
+        return $this->hasMany(DriveFileVersion::class)->orderBy('version', 'desc')->withTrashed();
     }
 
     /**

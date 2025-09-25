@@ -18,6 +18,12 @@ class BulkCreateNewDriveFiles
      */
     public function handle(array $data): array
     {
+        if ($data['files'] === []) {
+            return [];
+        }
+
+        // TODO: check files names not exists in target folder
+
         return DB::transaction(function () use ($data) {
             $results = [];
 

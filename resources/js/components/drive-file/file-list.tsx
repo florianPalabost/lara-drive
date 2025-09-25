@@ -6,13 +6,13 @@ import FileVersionTable from '@/components/data-table/file-versions-table';
 import { DriveFile, DriveFileVersion } from '@/types/folder';
 import { fileListColumns } from '../data-table/columns/file-list-columns';
 import { DriveFileListActions } from '../data-table/row-actions/file-list-row-actions';
-import { FileListToolbar } from './file-list-toolbar';
+import { FileListToolbar } from '../data-table/toolbars/file-list-toolbar';
 import { FileMoveDialog } from './file-move-dialog';
 import { FilePreviewDialog } from './file-preview-dialog';
 import { FileShareDialog } from './file-share-dialog';
 
 interface FileListProps {
-    files: Array<DriveFile>;
+    files: DriveFile[];
 }
 
 export function FileList({ files }: FileListProps) {
@@ -28,7 +28,7 @@ export function FileList({ files }: FileListProps) {
         setPreviewFile(file);
     };
 
-    const handleDeleteFile = (file: DriveFile) => () => {
+    const handleDeleteFile = (file: DriveFile) => {
         if (confirm('Are you sure you want to delete this file?')) {
             router.delete(route('files.destroy', file.uuid), {
                 onSuccess: () => {

@@ -161,7 +161,7 @@ export function createDataTableComponent<TData, TValue>() {
         {
             selectedRows.length > 0 && (
                 <div className="text-sm">
-                   {selectedRows.length} / {selectedRows.length} row(s) selected
+                   {selectedRows.length} / {table.getRowModel().rows.length} row(s) selected
                 </div>
             )
         }

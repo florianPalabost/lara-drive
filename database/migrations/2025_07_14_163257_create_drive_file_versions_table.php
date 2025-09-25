@@ -25,6 +25,7 @@ return new class extends Migration
             $table->unsignedBigInteger('size');
             $table->string('path');
             $table->timestampsTz();
+            $table->softDeletesTz();
 
             $table->unique(['drive_file_id', 'version']);
         });

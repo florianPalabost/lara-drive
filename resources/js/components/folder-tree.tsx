@@ -49,8 +49,8 @@ export function FolderTree() {
     }, [selectedFolder]);
 
     return (
-        <div className="border rounded-lg bg-white shadow-sm p-4 max-h-screen overflow-auto">
-            <div className="border rounded-md bg-white shadow-sm p-2 h-full flex flex-col">
+        <div className=" bg-white shadow-md p-4 max-h-screen">
+            <div className=" bg-white p-2 h-full flex flex-col">
                 <Button className="text-sm mb-4 px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-center">
                     <a
                         href={route('folders.create', {
@@ -75,12 +75,14 @@ export function FolderTree() {
                     childrenAccessor="children"
                     idAccessor="uuid"
                     parentIdAccessor="parent_id"
+                    indent={16}
                     onSelect={handleOnSelect}
                     disableDrag
                     disableMultiSelection
-                    className="text-sm"
+                    className="text-sm flex flex-col w-full overflow-auto"
                     rowHeight={32}
                     height={window.innerHeight - 150}
+                    width={'100%'}
                 >
                     {({ node, style, dragHandle }: TreeNodeProps<Folder>) => <FolderTreeNode node={node} style={style} dragHandle={dragHandle} />}
                 </Tree>

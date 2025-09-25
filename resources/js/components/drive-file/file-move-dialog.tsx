@@ -2,7 +2,7 @@ import { useForm } from '@inertiajs/react';
 import { Row } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { FolderProvider } from '@/contexts/folder-context';
+import { FolderProvider, useFolderContext } from '@/contexts/folder-context';
 import { DriveFile, DriveFileVersion, Folder } from '@/types/folder';
 import { useFileVersionHistoryDataTableContext } from '../data-table/file-versions-table';
 import { FolderPickerNode, FolderTreePicker } from '../folder/folder-tree-picker';
@@ -16,6 +16,7 @@ interface FileMoveDialogProps {
 
 export function FileMoveDialog({ open, onOpenChange }: FileMoveDialogProps) {
     const [folders, setFolders] = useState<Folder[]>([]);
+    const { loadFolder, selectedFolder } = useFolderContext();
 
     const { selectedRows } = useFileVersionHistoryDataTableContext();
 
@@ -37,6 +38,10 @@ export function FileMoveDialog({ open, onOpenChange }: FileMoveDialogProps) {
             onSuccess: () => {
                 toast.success('File(s) moved successfully!');
                 onOpenChange(false);
+
+                if (selectedFolder?.uuid) {
+                    loadFolder(selectedFolder?.uuid);
+                }
             },
             onError: (errors) => {
                 toast.error('File move failed!');
