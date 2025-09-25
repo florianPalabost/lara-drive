@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Actions\CreateNewDriveFile;
+use App\Actions\DriveFile\CreateNewDriveFile;
 use App\Models\Folder;
 use Exception;
 use Illuminate\Http\UploadedFile;
