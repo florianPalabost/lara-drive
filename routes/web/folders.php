@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\FolderController;
-use App\Http\Controllers\FolderTreePickerController;
-use App\Http\Controllers\ImportFolderController;
+use App\Http\Controllers\Folder\FolderController;
+use App\Http\Controllers\Folder\FolderTreePickerController;
+use App\Http\Controllers\Folder\ImportFolderController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {

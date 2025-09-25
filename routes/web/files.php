@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\BulkArchiveDriveFileController;
-use App\Http\Controllers\BulkDestroyDriveFileController;
-use App\Http\Controllers\BulkRestoreDriveFileController;
-use App\Http\Controllers\DownloadDriveFileController;
-use App\Http\Controllers\DownloadDriveFileVersionController;
-use App\Http\Controllers\DriveFileController;
-use App\Http\Controllers\DriveFileVersionController;
-use App\Http\Controllers\MoveDriveFileController;
-use App\Http\Controllers\PreviewDriveFileController;
-use App\Http\Controllers\RestoreDriveFileController;
-use App\Http\Controllers\SearchDriveFileController;
-use App\Http\Controllers\SharedDriveFileController;
-use App\Http\Controllers\ShareDriveFileController;
+use App\Http\Controllers\DriveFile\BulkArchiveDriveFileController;
+use App\Http\Controllers\DriveFile\BulkDestroyDriveFileController;
+use App\Http\Controllers\DriveFile\BulkRestoreDriveFileController;
+use App\Http\Controllers\DriveFile\DownloadDriveFileController;
+use App\Http\Controllers\DriveFile\DriveFileController;
+use App\Http\Controllers\DriveFile\MoveDriveFileController;
+use App\Http\Controllers\DriveFile\PreviewDriveFileController;
+use App\Http\Controllers\DriveFile\RestoreDriveFileController;
+use App\Http\Controllers\DriveFile\SearchDriveFileController;
+use App\Http\Controllers\DriveFileShare\SharedDriveFileController;
+use App\Http\Controllers\DriveFileShare\ShareDriveFileController;
+use App\Http\Controllers\DriveFileVersion\DownloadDriveFileVersionController;
+use App\Http\Controllers\DriveFileVersion\DriveFileVersionController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {
