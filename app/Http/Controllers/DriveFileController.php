@@ -84,6 +84,7 @@ class DriveFileController extends Controller
     {
         $trashedFiles = auth()->user()
             ->files()
+            ->with('folder')
             ->onlyTrashed()
             ->get();
 

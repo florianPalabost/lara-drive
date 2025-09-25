@@ -8,7 +8,7 @@ use App\Http\Rules\ArrayExistModelIds;
 use App\Models\DriveFile;
 use Illuminate\Foundation\Http\FormRequest;
 
-class BulkDeleteDriveFileRequest extends FormRequest
+class BulkArchiveDriveFileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,9 @@ class BulkDeleteDriveFileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file_ids' => ['required', 'array', new ArrayExistModelIds(DriveFile::class)],
+            'file_ids'          => ['required', 'array', new ArrayExistModelIds(DriveFile::class)],
+
+            'current_folder_id' => ['required', 'exists:folders,uuid'],
         ];
     }
 }

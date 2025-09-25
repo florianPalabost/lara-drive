@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\BulkDeleteDriveFileController;
+use App\Http\Controllers\BulkArchiveDriveFileController;
+use App\Http\Controllers\BulkDestroyDriveFileController;
 use App\Http\Controllers\BulkRestoreDriveFileController;
 use App\Http\Controllers\DownloadDriveFileController;
 use App\Http\Controllers\DownloadDriveFileVersionController;
@@ -29,7 +30,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('files/recent', [DriveFileController::class, 'recent'])->name('files.recent');
     Route::post('files/restore', BulkRestoreDriveFileController::class)->name('files.restore.bulk');
-    Route::post('/files/destroy', BulkDeleteDriveFileController::class)->name('files.destroy.bulk');
+    Route::post('/files/archive', BulkArchiveDriveFileController::class)->name('files.archive.bulk');
+    Route::post('/files/destroy', BulkDestroyDriveFileController::class)->name('files.destroy.bulk');
     Route::get('files/search', SearchDriveFileController::class)->name('files.search');
     Route::get('files/trashed', [DriveFileController::class, 'trashed'])->name('files.trashed');
     Route::resource('files', DriveFileController::class);

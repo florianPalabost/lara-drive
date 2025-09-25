@@ -9,7 +9,7 @@ use App\Models\DriveFileVersion;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
-class BulkDeleteDriveFiles
+class BulkArchiveDriveFiles
 {
     /**
      * Soft delete files & versions (mostl likely current version)
@@ -19,7 +19,7 @@ class BulkDeleteDriveFiles
     public function handle(array $driveFileIds): void
     {
         // TODO: after implem, just early return instead of abort
-        abort_if(boolean: $driveFileIds === [], code: Response::HTTP_UNPROCESSABLE_ENTITY, message: 'no file to delete');
+        abort_if(boolean: $driveFileIds === [], code: Response::HTTP_UNPROCESSABLE_ENTITY, message: 'no file to archive');
 
         DB::transaction(function () use ($driveFileIds) {
             DriveFileVersion::query()->whereIn('drive_file_id', $driveFileIds)->delete();
@@ -31,7 +31,7 @@ class BulkDeleteDriveFiles
             abort_unless(
                 boolean: $filesDeletedCount === count($driveFileIds),
                 code: Response::HTTP_INTERNAL_SERVER_ERROR,
-                message: 'Mismatch between files deleted and files to delete.'
+                message: 'Mismatch between files deleted and files to archive.'
             );
         });
     }
