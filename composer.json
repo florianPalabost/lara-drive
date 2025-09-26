@@ -7,21 +7,21 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "inertiajs/inertia-laravel": "^2.0.6",
+        "inertiajs/inertia-laravel": "^2.0.7",
         "kalnoy/nestedset": "^6.0.6",
-        "laravel/framework": "^12.28.1",
+        "laravel/framework": "^12.31.1",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "^3.29",
-        "tightenco/ziggy": "^2.5.3"
+        "tightenco/ziggy": "^2.6.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.6",
         "driftingly/rector-laravel": "^2.0.7",
         "fakerphp/faker": "^1.24.1",
-        "larastan/larastan": "^3.6.1",
+        "larastan/larastan": "^3.7.2",
         "laravel/pail": "^1.2.3",
-        "laravel/pint": "^1.24",
-        "laravel/sail": "^1.45",
+        "laravel/pint": "^1.25.1",
+        "laravel/sail": "^1.46",
         "mockery/mockery": "^1.6.12",
         "nunomaduro/collision": "^8.8.2",
         "pestphp/pest": "^3.8.4",
