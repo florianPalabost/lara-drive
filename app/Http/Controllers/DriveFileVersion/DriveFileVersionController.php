@@ -8,9 +8,7 @@ use App\Actions\DriveFileVersion\CreateNewDriveFileVersion;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DriveFileVersion\StoreDriveFileVersionRequest;
 use App\Models\DriveFile;
-use App\Models\DriveFileVersion;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Inertia\Response;
 
@@ -30,11 +28,6 @@ class DriveFileVersionController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create(DriveFile $file) {}
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(
@@ -52,24 +45,4 @@ class DriveFileVersionController extends Controller
 
         return to_route('files.versions.index', ['file' => $file->uuid]);
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(DriveFile $file, DriveFileVersion $version) {}
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(DriveFile $file, DriveFileVersion $version) {}
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, DriveFile $file, DriveFileVersion $version) {}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(DriveFile $file, DriveFileVersion $version) {}
 }
