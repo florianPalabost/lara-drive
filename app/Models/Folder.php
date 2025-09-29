@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Folder extends Model
 {
@@ -39,6 +40,22 @@ class Folder extends Model
     public function files(): HasMany
     {
         return $this->hasMany(DriveFile::class, 'folder_id');
+    }
+
+    /**
+     * @return MorphMany<ResourcePermission,$this>
+     */
+    public function permissions(): MorphMany
+    {
+        return $this->morphMany(ResourcePermission::class, 'permissionable');
+    }
+
+    /**
+     * @return MorphMany<ResourceShare,$this>
+     */
+    public function shares(): MorphMany
+    {
+        return $this->morphMany(ResourceShare::class, 'shareable');
     }
 
     /**

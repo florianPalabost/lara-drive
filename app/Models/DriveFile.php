@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DriveFile extends Model
@@ -32,12 +33,28 @@ class DriveFile extends Model
         return $this->belongsTo(Folder::class);
     }
 
+    // /**
+    //  * @return HasMany<DriveFileShare,$this>
+    //  */
+    // public function shares(): HasMany
+    // {
+    //     return $this->hasMany(DriveFileShare::class, 'drive_file_id');
+    // }
+
     /**
-     * @return HasMany<DriveFileShare,$this>
+     * @return MorphMany<ResourcePermission,$this>
      */
-    public function shares(): HasMany
+    public function permissions(): MorphMany
     {
-        return $this->hasMany(DriveFileShare::class, 'drive_file_id');
+        return $this->morphMany(ResourcePermission::class, 'permissionable');
+    }
+
+    /**
+     * @return MorphMany<ResourceShare,$this>
+     */
+    public function shares(): MorphMany
+    {
+        return $this->morphMany(ResourceShare::class, 'shareable');
     }
 
     /**
