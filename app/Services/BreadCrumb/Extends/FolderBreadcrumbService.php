@@ -23,6 +23,17 @@ class FolderBreadcrumbService extends BreadcrumbService
         return $breadcrumbs;
     }
 
+    public static function editPermissionFolderPage(Folder $folder): array
+    {
+        return [
+            ...static::folderIndexPage($folder),
+            [
+                'title' => 'Edit Permissions',
+                'href'  => route('folders.share.edit', ['folder' => $folder->uuid]),
+            ],
+        ];
+    }
+
     /**
      * @return Breadcrumb[]
      */

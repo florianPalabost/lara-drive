@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Enums\ResourcePermissionEnum;
 use App\Models\DriveFile;
 use App\Models\User;
 use App\Services\ResourcePermissionService;
@@ -25,17 +26,17 @@ class DriveFilePolicy
      */
     public function view(User $user, DriveFile $driveFile): bool
     {
-        return $this->resourcePermissionService->can($user, $driveFile, 'view');
+        return $this->resourcePermissionService->can($user, $driveFile, ResourcePermissionEnum::VIEW);
     }
 
     public function comment(User $user, DriveFile $driveFile): bool
     {
-        return $this->resourcePermissionService->can($user, $driveFile, 'comment');
+        return $this->resourcePermissionService->can($user, $driveFile, ResourcePermissionEnum::COMMENT);
     }
 
     public function edit(User $user, DriveFile $driveFile): bool
     {
-        return $this->resourcePermissionService->can($user, $driveFile, 'edit');
+        return $this->resourcePermissionService->can($user, $driveFile, ResourcePermissionEnum::EDIT);
     }
 
     // /**

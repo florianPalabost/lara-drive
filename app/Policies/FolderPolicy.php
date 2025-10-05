@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Enums\ResourcePermissionEnum;
 use App\Models\Folder;
 use App\Models\User;
 use App\Services\ResourcePermissionService;
@@ -14,17 +15,17 @@ class FolderPolicy
 
     public function view(User $user, Folder $folder): bool
     {
-        return $this->resourcePermissionService->can($user, $folder, 'view');
+        return $this->resourcePermissionService->can($user, $folder, ResourcePermissionEnum::VIEW);
     }
 
     public function comment(User $user, Folder $folder): bool
     {
-        return $this->resourcePermissionService->can($user, $folder, 'comment');
+        return $this->resourcePermissionService->can($user, $folder, ResourcePermissionEnum::COMMENT);
     }
 
     public function edit(User $user, Folder $folder): bool
     {
-        return $this->resourcePermissionService->can($user, $folder, 'edit');
+        return $this->resourcePermissionService->can($user, $folder, ResourcePermissionEnum::EDIT);
     }
     // /**
     //  * Determine whether the user can view any models.

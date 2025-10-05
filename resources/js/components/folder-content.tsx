@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/react';
-import { FolderIcon, LucideDelete, LucidePen, LucideTrash } from 'lucide-react';
+import { FolderIcon, LucideDelete, LucidePen, LucideShare, LucideShare2, LucideTrash } from 'lucide-react';
 import { toast } from 'sonner';
 import { useFolderContext } from '@/contexts/folder-context';
 import { Folder } from '@/types/folder';
@@ -13,6 +13,10 @@ export function FolderContent() {
     const handleSelectFolder = async (newSelectedFolder: Folder) => {
         console.debug('selected folder', newSelectedFolder);
         await loadFolder(newSelectedFolder.uuid);
+    };
+
+    const handleShare = () => {
+        router.get(route('folders.share.edit', folder?.uuid));
     };
 
     const handleEdit = () => {
@@ -44,6 +48,9 @@ export function FolderContent() {
                     <p>Created: {new Date(folder.created_at).toLocaleString()}</p>
                     <p>Last updated: {new Date(folder.updated_at).toLocaleString()}</p>
                 </div>
+                <Button onClick={handleShare} className="bg-blue-500 hover:bg-blue-600 mr-2">
+                    <LucideShare2 />
+                </Button>
                 <Button onClick={handleEdit} className="bg-orange-500 hover:bg-orange-600 mr-2">
                     <LucidePen />
                 </Button>
