@@ -23,6 +23,9 @@ class FolderBreadcrumbService extends BreadcrumbService
         return $breadcrumbs;
     }
 
+    /**
+     * @return Breadcrumb[]
+     */
     public static function editPermissionFolderPage(Folder $folder): array
     {
         return [

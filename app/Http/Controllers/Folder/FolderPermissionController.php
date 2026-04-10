@@ -34,13 +34,9 @@ class FolderPermissionController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request) {}
-
     public function edit(Request $request, Folder $folder): Response
     {
+        // only owner or superuser can edit current folder
         Gate::authorize('edit', $folder);
 
         $folder->load('permissions', 'shares');
@@ -51,9 +47,4 @@ class FolderPermissionController extends Controller
             'sharedUsers' => $folder->permissions()->with('user:id,name,email')->get(),
         ]);
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Folder $folder) {}
 }

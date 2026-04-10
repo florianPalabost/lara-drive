@@ -8,6 +8,8 @@ use App\Enums\ResourcePermissionEnum;
 use App\Models\DriveFile;
 use App\Models\User;
 use App\Services\ResourcePermissionService;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class DriveFilePolicy
 {
@@ -20,6 +22,25 @@ class DriveFilePolicy
     // {
     //     return false;
     // }
+
+    public function boot(): void
+    {
+        // Gate::define('custom-view-file', function (User $user, DriveFile $file) {
+        //     return $user->id === $file->user_id;
+        // });
+
+        // // OR with policy mapping "acl/permission/ability" to policy method
+        // // @see https://laravel.com/docs/12.x/authorization#writing-gates
+        // Gate::define('custom-view-file', [DriveFilePolicy::class, 'view']);
+    }
+
+    // Extract common checks/codes for policies (is_admin check for example)
+    public function before(User $user): bool
+    {
+        Log::debug('DriveFilePolicy before check', ['user_id' => $user->id]);
+
+        return true;
+    }
 
     /**
      * Determine whether the user can view the model.
@@ -38,44 +59,4 @@ class DriveFilePolicy
     {
         return $this->resourcePermissionService->can($user, $driveFile, ResourcePermissionEnum::EDIT);
     }
-
-    // /**
-    //  * Determine whether the user can create models.
-    //  */
-    // public function create(User $user): bool
-    // {
-    //     return false;
-    // }
-
-    // /**
-    //  * Determine whether the user can update the model.
-    //  */
-    // public function update(User $user, DriveFile $driveFile): bool
-    // {
-    //     return false;
-    // }
-
-    // /**
-    //  * Determine whether the user can delete the model.
-    //  */
-    // public function delete(User $user, DriveFile $driveFile): bool
-    // {
-    //     return false;
-    // }
-
-    // /**
-    //  * Determine whether the user can restore the model.
-    //  */
-    // public function restore(User $user, DriveFile $driveFile): bool
-    // {
-    //     return false;
-    // }
-
-    // /**
-    //  * Determine whether the user can permanently delete the model.
-    //  */
-    // public function forceDelete(User $user, DriveFile $driveFile): bool
-    // {
-    //     return false;
-    // }
 }
