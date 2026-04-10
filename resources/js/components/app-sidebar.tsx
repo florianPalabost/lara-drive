@@ -1,35 +1,39 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, Clock, Folder, LayoutGrid, LucideTrash } from 'lucide-react';
-import { NavFooter } from '@/components/nav-footer';
+import { Clock, Folder, Trash2 } from 'lucide-react';
+import { FolderTree } from '@/components/folder-tree';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { FolderActions } from '@/components/sidebar/folder-actions';
+import { StorageWidget } from '@/components/storage-widget';
+import {
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarHeader,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    SidebarGroup,
+    SidebarGroupLabel,
+} from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Folders & Files',
+        title: 'My Drive',
         href: '/folders',
         icon: Folder,
     },
     {
-        title: 'Recent Files',
+        title: 'Recent',
         href: '/files/recent',
         icon: Clock,
     },
-];
-
-const footerNavItems: NavItem[] = [
     {
         title: 'Trash',
         href: '/files/trashed',
-        icon: LucideTrash,
+        icon: Trash2,
     },
 ];
 
@@ -40,7 +44,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href="/dashboard" prefetch>
+                            <Link href="/folders" prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
@@ -48,12 +52,18 @@ export function AppSidebar() {
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent>
+            <SidebarContent className="flex flex-col overflow-hidden">
                 <NavMain items={mainNavItems} />
+                <FolderActions />
+
+                <SidebarGroup className="flex-1 min-h-0 overflow-hidden group-data-[collapsible=icon]:hidden">
+                    <SidebarGroupLabel>Folders</SidebarGroupLabel>
+                    <FolderTree />
+                </SidebarGroup>
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
+                <StorageWidget />
                 <NavUser />
             </SidebarFooter>
         </Sidebar>
