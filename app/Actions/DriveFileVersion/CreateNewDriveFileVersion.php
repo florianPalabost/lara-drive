@@ -24,7 +24,7 @@ class CreateNewDriveFileVersion
 
         // create file path folder
         $path = sprintf('users/%s/folders/%s%s', $user->uuid, $folder->parent ? $folder->path . '/' . $folder->uuid : '', $folder->uuid);
-        $storedPath = $uploadedFile->storeAs($path, $newVersionUuid, ['disk' => 'minio']);
+        $storedPath = $uploadedFile->storeAs($path, $newVersionUuid, ['disk' => 's3']);
 
         $maxVersion = $driveFile->versions()->max('version');
 

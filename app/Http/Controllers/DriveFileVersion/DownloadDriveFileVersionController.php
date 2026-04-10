@@ -18,9 +18,9 @@ class DownloadDriveFileVersionController extends Controller
      */
     public function __invoke(Request $request, DriveFile $file, DriveFileVersion $version): Response
     {
-        abort_unless(Storage::disk('minio')->exists($version->path), Response::HTTP_NOT_FOUND, 'File not found in storage.');
+        abort_unless(Storage::disk('s3')->exists($version->path), Response::HTTP_NOT_FOUND, 'File not found in storage.');
 
-        return Storage::disk('minio')->download($version->path, $file->original_name, [
+        return Storage::disk('s3')->download($version->path, $file->original_name, [
             'Content-Type'        => $version->mime_type,
             'Content-Disposition' => sprintf('attachment; filename="%s"', $file->original_name),
         ]);

@@ -123,7 +123,7 @@ class FolderController extends Controller
         // TODO: need to also delete folder from storage ?
         // may need to keep folder in storage in case of restore ?
         try {
-            Storage::disk('minio')->deleteDirectory($folder->path);
+            Storage::disk('s3')->deleteDirectory($folder->path);
             $folder->delete();
         }
         catch (Exception $exception) {

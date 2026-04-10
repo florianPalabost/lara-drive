@@ -15,7 +15,7 @@ class DeleteDriveFile
 
         DB::transaction(function () use ($file) {
             // TODO: create action to delete file in storage
-            // Storage::disk('minio')->delete($file->path);
+            // Storage::disk('s3')->delete($file->path);
 
             if ($file->versions()->exists()) {
                 $file->versions()->delete();

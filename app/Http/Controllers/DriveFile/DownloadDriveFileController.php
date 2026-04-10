@@ -20,12 +20,12 @@ class DownloadDriveFileController extends Controller
         $file = DriveFile::query()->with('currentVersion')->where('uuid', $uuid)->firstOrFail();
 
         abort_unless(
-            boolean: Storage::disk('minio')->exists($file->currentVersion->path),
+            boolean: Storage::disk('s3')->exists($file->currentVersion->path),
             code: Response::HTTP_NOT_FOUND,
             message: 'File not found in storage.'
         );
 
-        return Storage::disk('minio')->download($file->currentVersion->path, $file->original_name, [
+        return Storage::disk('s3')->download($file->currentVersion->path, $file->original_name, [
             'Content-Type'        => $file->currentVersion->mime_type,
             'Content-Disposition' => sprintf('attachment; filename="%s"', $file->original_name),
         ]);

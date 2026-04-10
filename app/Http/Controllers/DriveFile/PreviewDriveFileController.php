@@ -22,12 +22,12 @@ class PreviewDriveFileController extends Controller
         $fileAssociated = $file->file;
 
         abort_unless(
-            boolean: Storage::disk('minio')->exists($file->path),
+            boolean: Storage::disk('s3')->exists($file->path),
             code: Response::HTTP_NOT_FOUND,
             message: 'File not found in storage.'
         );
 
-        $disk = Storage::disk('minio');
+        $disk = Storage::disk('s3');
         $stream = $disk->readStream($file->path);
 
         return response()->stream(
