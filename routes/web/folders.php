@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Folder\BulkDestroyFolderController;
 use App\Http\Controllers\Folder\FolderController;
 use App\Http\Controllers\Folder\FolderPermissionController;
 use App\Http\Controllers\Folder\FolderTreePickerController;
 use App\Http\Controllers\Folder\ImportFolderController;
+use App\Http\Controllers\Folder\MoveFolderController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -19,6 +21,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/folders/{folder:uuid}/permissions/{user}', [FolderPermissionController::class, 'destroy'])->name('folders.permissions.destroy');
 
     Route::get('/folders/{folder:uuid}/share', [FolderPermissionController::class, 'edit'])->name('folders.share.edit');
+
+    Route::post('/folders/bulk-destroy', BulkDestroyFolderController::class)->name('folders.bulk.destroy');
+    Route::post('/folders/move', MoveFolderController::class)->name('folders.move');
 
     Route::resource('folders', FolderController::class);
 });
