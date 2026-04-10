@@ -1,52 +1,67 @@
 services:
     laravel.test:
         build:
-            context: './docker/8.4'
+            context: "./docker/8.4"
             dockerfile: Dockerfile
             args:
-                WWWGROUP: '${WWWGROUP}'
-        image: 'sail-8.4/app'
+                WWWGROUP: "${WWWGROUP:-1000}"
+        image: "sail-8.4/app"
         extra_hosts:
-            - 'host.docker.internal:host-gateway'
+            - "host.docker.internal:host-gateway"
         ports:
-            - '${APP_PORT:-80}:80'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+            - "${APP_PORT:-80}:80"
+            - "${VITE_PORT:-5173}:${VITE_PORT:-5173}"
         environment:
-            WWWUSER: '${WWWUSER}'
+            WWWUSER: "${WWWUSER}"
             LARAVEL_SAIL: 1
-            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
-            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
-            IGNITION_LOCAL_SITES_PATH: '${PWD}'
+            XDEBUG_MODE: "${SAIL_XDEBUG_MODE:-off}"
+            XDEBUG_CONFIG: "${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}"
+            IGNITION_LOCAL_SITES_PATH: "${PWD}"
         volumes:
-            - '.:/var/www/html'
+            - ".:/var/www/html"
         networks:
             - sail
         depends_on:
-            - minio
-    minio:
-        image: 'minio/minio:latest'
+            - seaweedfs
+    # S3-compatible object storage — Apache 2.0 (replaces MinIO which is AGPL-3.0)
+    # Single-process mode: master + volume + filer + s3 gateway in one container
+    seaweedfs:
+        image: "chrislusf/seaweedfs:latest"
         ports:
-            - '${FORWARD_MINIO_PORT:-9000}:9000'
-            - '${FORWARD_MINIO_CONSOLE_PORT:-8900}:8900'
-        environment:
-            MINIO_ROOT_USER: sail
-            MINIO_ROOT_PASSWORD: password
+            - "9333:9333"                          # master API
+            - "8080:8080"                          # volume server
+            - "8888:8888"                          # filer
+            - "${FORWARD_S3_PORT:-9000}:8333"      # S3 API
         volumes:
-            - 'sail-minio:/data'
+            - "sail-seaweedfs:/data"
+            - "./docker/seaweedfs/s3.json:/etc/seaweedfs/s3.json:ro"
         networks:
             - sail
-        command: 'minio server /data --console-address ":8900"'
+        command: >
+            server
+            -dir=/data
+            -master.port=9333
+            -volume.port=8080
+            -volume.max=0
+            -filer
+            -filer.port=8888
+            -s3
+            -s3.port=8333
+            -s3.config=/etc/seaweedfs/s3.json
         healthcheck:
             test:
                 - CMD
-                - mc
-                - ready
-                - local
-            retries: 3
+                - wget
+                - --quiet
+                - --tries=1
+                - --spider
+                - "http://localhost:9333/cluster/status"
+            retries: 5
+            interval: 3s
             timeout: 5s
 networks:
     sail:
         driver: bridge
 volumes:
-    sail-minio:
+    sail-seaweedfs:
         driver: local

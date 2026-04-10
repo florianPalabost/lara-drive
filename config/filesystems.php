@@ -49,27 +49,17 @@ return [
             'report'     => false,
         ],
 
+        // S3-compatible disk — SeaweedFS (dev), Cloudflare R2 or any S3-compatible store (prod)
         's3'     => [
             'driver'                  => 's3',
             'key'                     => env('AWS_ACCESS_KEY_ID'),
             'secret'                  => env('AWS_SECRET_ACCESS_KEY'),
-            'region'                  => env('AWS_DEFAULT_REGION'),
-            'bucket'                  => env('AWS_BUCKET'),
-            'url'                     => env('AWS_URL'),
+            'region'                  => env('AWS_DEFAULT_REGION', 'us-east-1'),
+            'bucket'                  => env('AWS_BUCKET', 'lara-drive'),
             'endpoint'                => env('AWS_ENDPOINT'),
-            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', true),
             'throw'                   => false,
             'report'                  => false,
-        ],
-
-        'minio'  => [
-            'driver'                  => 's3',
-            'endpoint'                => env('MINIO_ENDPOINT', 'http://localhost:9000'),
-            'use_path_style_endpoint' => true,
-            'key'                     => env('MINIO_ACCESS_KEY', 'minioadmin'),
-            'secret'                  => env('MINIO_SECRET_KEY', 'minioadmin'),
-            'region'                  => env('MINIO_REGION', 'us-east-1'),
-            'bucket'                  => env('MINIO_BUCKET', 'your-bucket'),
         ],
     ],
 

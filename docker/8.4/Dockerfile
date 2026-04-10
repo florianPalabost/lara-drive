@@ -2,7 +2,7 @@ FROM ubuntu:24.04
 
 LABEL maintainer="Taylor Otwell"
 
-ARG WWWGROUP
+ARG WWWGROUP=1000
 ARG NODE_VERSION=22
 ARG MYSQL_CLIENT="mysql-client"
 ARG POSTGRES_VERSION=17
@@ -28,7 +28,7 @@ RUN apt-get update && apt-get upgrade -y \
     && apt-get update \
     && apt-get install -y php8.4-cli php8.4-dev \
        php8.4-pgsql php8.4-sqlite3 php8.4-gd \
-       php8.4-curl php8.4-mongodb \
+       php8.4-curl \
        php8.4-imap php8.4-mysql php8.4-mbstring \
        php8.4-xml php8.4-zip php8.4-bcmath php8.4-soap \
        php8.4-intl php8.4-readline \
@@ -40,7 +40,6 @@ RUN apt-get update && apt-get upgrade -y \
     && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_VERSION.x nodistro main" > /etc/apt/sources.list.d/nodesource.list \
     && apt-get update \
     && apt-get install -y nodejs \
-    && npm install -g npm \
     && npm install -g pnpm \
     && npm install -g bun \
     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /etc/apt/keyrings/yarn.gpg >/dev/null \
@@ -57,7 +56,8 @@ RUN apt-get update && apt-get upgrade -y \
 
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.4
 
-RUN userdel -r ubuntu
+RUN userdel -r ubuntu 2>/dev/null || true
+RUN groupdel ubuntu 2>/dev/null || true
 RUN groupadd --force -g $WWWGROUP sail
 RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u 1337 sail
 

@@ -1,0 +1,18 @@
+{
+    "identities": [
+        {
+            "name": "sail",
+            "credentials": [
+                {
+                    "accessKey": "sail",
+                    "secretKey": "secret"
+                }
+            ],
+            "actions": [
+                "Admin",
+                "Read",
+                "Write"
+            ]
+        }
+    ]
+}
