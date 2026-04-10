@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\DriveFileVersion;
 
+use App\Enums\ResourcePermissionEnum;
+use App\Services\ResourcePermissionService;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreDriveFileVersionRequest extends FormRequest
@@ -13,7 +15,11 @@ class StoreDriveFileVersionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return app(ResourcePermissionService::class)->can(
+            user: auth()->user(),
+            resource: $this->route('file'),
+            action: ResourcePermissionEnum::EDIT
+        );
     }
 
     /**
