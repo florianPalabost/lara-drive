@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 describe('sample test', function () {
     it('example', function () {
-       // Arrange
+        // Arrange
 
-       // Act
+        // Act
 
         // Assert
         expect(true)->toBe(true);
