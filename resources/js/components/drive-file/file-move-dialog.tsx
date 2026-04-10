@@ -1,53 +1,62 @@
-import { useForm } from '@inertiajs/react';
-import { Row } from '@tanstack/react-table';
+import { router } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { FolderProvider, useFolderContext } from '@/contexts/folder-context';
-import { DriveFile, DriveFileVersion, Folder } from '@/types/folder';
-import { useFileVersionHistoryDataTableContext } from '../data-table/file-versions-table';
-import { FolderPickerNode, FolderTreePicker } from '../folder/folder-tree-picker';
+import { Folder } from '@/types/folder';
+import { FolderTreePicker } from '../folder/folder-tree-picker';
 import { Button } from '../ui/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
 
 interface FileMoveDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    fileUuids?: string[];
+    folderUuids?: string[];
 }
 
-export function FileMoveDialog({ open, onOpenChange }: FileMoveDialogProps) {
+export function FileMoveDialog({ open, onOpenChange, fileUuids = [], folderUuids = [] }: FileMoveDialogProps) {
     const [folders, setFolders] = useState<Folder[]>([]);
+    const [targetFolderId, setTargetFolderId] = useState('');
+    const [processing, setProcessing] = useState(false);
     const { loadFolder, selectedFolder } = useFolderContext();
 
-    const { selectedRows } = useFileVersionHistoryDataTableContext();
-
-    const { data, setData, post, processing } = useForm({
-        file_ids: selectedRows.map((row: Row<DriveFileVersion>) => row.original.file.uuid),
-        target_folder_id: '',
-    });
-
-    console.debug('move dialog data', data);
-
-    const handleOnSelectFolder = (folderId: string) => {
-        setData('target_folder_id', folderId);
-    };
+    const totalCount = fileUuids.length + folderUuids.length;
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (!targetFolderId) return;
 
-        post(route('files.move'), {
-            onSuccess: () => {
-                toast.success('File(s) moved successfully!');
+        setProcessing(true);
+
+        const moveFiles = () =>
+            new Promise<void>((resolve, reject) => {
+                if (fileUuids.length === 0) return resolve();
+                router.post(
+                    route('files.move'),
+                    { file_ids: fileUuids, target_folder_id: targetFolderId },
+                    { onSuccess: () => resolve(), onError: reject },
+                );
+            });
+
+        const moveFolders = () =>
+            new Promise<void>((resolve, reject) => {
+                if (folderUuids.length === 0) return resolve();
+                router.post(
+                    route('folders.move'),
+                    { folder_ids: folderUuids, target_folder_id: targetFolderId },
+                    { onSuccess: () => resolve(), onError: reject },
+                );
+            });
+
+        moveFiles()
+            .then(moveFolders)
+            .then(() => {
+                toast.success(`${totalCount} item(s) moved`);
                 onOpenChange(false);
-
-                if (selectedFolder?.uuid) {
-                    loadFolder(selectedFolder?.uuid);
-                }
-            },
-            onError: (errors) => {
-                toast.error('File move failed!');
-                console.error(errors);
-            },
-        });
+                if (selectedFolder?.uuid) loadFolder(selectedFolder.uuid);
+            })
+            .catch(() => toast.error('Move failed'))
+            .finally(() => setProcessing(false));
     };
 
     useEffect(() => {
@@ -56,12 +65,10 @@ export function FileMoveDialog({ open, onOpenChange }: FileMoveDialogProps) {
                 const res = await fetch(route('folders.tree'));
                 const { folders } = await res.json();
                 setFolders(folders);
-                console.debug('folders loaded move dialog', folders);
             } catch (err) {
                 console.error(err);
             }
         }
-
         loadFolders();
     }, []);
 
@@ -69,15 +76,14 @@ export function FileMoveDialog({ open, onOpenChange }: FileMoveDialogProps) {
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Move {selectedRows.length} file(s)</DialogTitle>
+                    <DialogTitle>Move {totalCount} item(s)</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit}>
                     <FolderProvider initialFolders={folders}>
-                        <FolderTreePicker onSelect={handleOnSelectFolder} />
+                        <FolderTreePicker onSelect={setTargetFolderId} />
                     </FolderProvider>
-
                     <DialogFooter>
-                        <Button type="submit" disabled={processing}>
+                        <Button type="submit" disabled={processing || !targetFolderId}>
                             Move
                         </Button>
                     </DialogFooter>

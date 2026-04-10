@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/react';
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, Row } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import FileVersionTable from '@/components/data-table/file-versions-table';
@@ -7,6 +7,7 @@ import { DriveFile, DriveFileVersion } from '@/types/folder';
 import { fileListColumns } from '../data-table/columns/file-list-columns';
 import { DriveFileListActions } from '../data-table/row-actions/file-list-row-actions';
 import { FileListToolbar } from '../data-table/toolbars/file-list-toolbar';
+import { useFileVersionHistoryDataTableContext } from '../data-table/file-versions-table';
 import { FileMoveDialog } from './file-move-dialog';
 import { FilePreviewDialog } from './file-preview-dialog';
 import { FileShareDialog } from './file-share-dialog';
@@ -44,7 +45,7 @@ export function FileList({ files }: FileListProps) {
 
     const columns: ColumnDef<DriveFileVersion>[] = useMemo(() => fileListColumns(), []);
     const actions: DriveFileListActions = {
-        onMoveFiles: (file) => setMoveOpen(true),
+        onMoveFiles: () => setMoveOpen(true),
         onDeleteFile: handleDeleteFile,
         onPreviewFile: handlePreviewFile,
         onShareFile: (file) => setShareFile(file),
@@ -66,8 +67,7 @@ export function FileList({ files }: FileListProps) {
 
                 <FileVersionTable.Pagination />
 
-                {/* bulk modal actions */}
-                {moveOpen && <FileMoveDialog open={moveOpen} onOpenChange={setMoveOpen} />}
+                {moveOpen && <MoveDialogFromContext open={moveOpen} onOpenChange={setMoveOpen} />}
             </FileVersionTable>
 
             {previewFile && (
@@ -78,7 +78,20 @@ export function FileList({ files }: FileListProps) {
                 />
             )}
 
-            {shareFile && <FileShareDialog open={!!shareFile} onOpenChange={(open) => setShareFile(open ? shareFile : null)} file={shareFile} />}
+            {shareFile && (
+                <FileShareDialog
+                    open={!!shareFile}
+                    onOpenChange={(open) => setShareFile(open ? shareFile : null)}
+                    file={shareFile}
+                />
+            )}
         </div>
     );
+}
+
+/** Reads selected rows from the table context and passes UUIDs to FileMoveDialog. */
+function MoveDialogFromContext({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+    const { selectedRows } = useFileVersionHistoryDataTableContext();
+    const fileUuids = selectedRows.map((row: Row<DriveFileVersion>) => row.original.file.uuid);
+    return <FileMoveDialog open={open} onOpenChange={onOpenChange} fileUuids={fileUuids} />;
 }
