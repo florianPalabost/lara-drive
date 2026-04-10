@@ -1,5 +1,6 @@
 import { LucideIcon } from 'lucide-react';
 import type { Config } from 'ziggy-js';
+import type { Folder } from '@/types/folder';
 
 export interface Auth {
     user: User;
@@ -28,6 +29,8 @@ export interface SharedData {
     auth: Auth;
     ziggy: Config & { location: string };
     sidebarOpen: boolean;
+    rootFolders: Folder[];
+    storageUsed: number;
     [key: string]: unknown;
 }
 

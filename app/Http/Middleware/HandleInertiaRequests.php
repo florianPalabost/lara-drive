@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\Services\FolderService;
+use App\Services\StorageService;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -53,7 +55,13 @@ class HandleInertiaRequests extends Middleware
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
-            'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'sidebarOpen'  => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'rootFolders'  => fn (): array => $request->user()
+                ? app(FolderService::class)->getRootFolders($request->user())->toArray()
+                : [],
+            'storageUsed'  => fn (): int => $request->user()
+                ? app(StorageService::class)->getUsedBytes($request->user())
+                : 0,
         ];
     }
 }
